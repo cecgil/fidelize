@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sucesso</title>
+</head>
+<body>
+
+<h2>Visita registrada!</h2>
+
+<p th:text="'Obrigado, ' + ${cliente.nome} + '!'"></p>
+<p th:text="'Total de visitas: ' + ${totalVisitas}"></p>
+
+<a th:href="@{'/c/' + ${empresa.id}}">Registrar nova visita</a>
+
+</body>
+</html>
