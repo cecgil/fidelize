@@ -1,0 +1,8 @@
+<h2>Confirmar Resgate</h2>
+
+<p th:text="'Cliente: ' + ${resgate.cliente.nome}"></p>
+<p th:text="'Recompensa: ' + ${resgate.recompensa.nome}"></p>
+
+<form th:action="@{'/validar/' + ${token} + '/confirmar'}" method="post">
+    <button type="submit">Confirmar uso</button>
+</form>

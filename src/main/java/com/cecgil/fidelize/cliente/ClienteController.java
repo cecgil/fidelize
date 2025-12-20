@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cecgil.fidelize.empresa.Empresa;
 import com.cecgil.fidelize.empresa.EmpresaRepository;
-import com.cecgil.fidelize.visita.Visita;
-import com.cecgil.fidelize.visita.VisitaRepository;
+import com.cecgil.fidelize.fidelidade.visita.Visita;
+import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
 
 
 @Controller

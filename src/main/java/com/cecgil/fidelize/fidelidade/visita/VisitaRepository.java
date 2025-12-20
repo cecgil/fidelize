@@ -1,4 +1,4 @@
-package com.cecgil.fidelize.visita;
+package com.cecgil.fidelize.fidelidade.visita;
 
 import java.util.UUID;
 
