@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Sucesso</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
 </head>
 <body>
 
-<h2>Visita registrada!</h2>
+<div class="container">
+    <div class="card text-center">
+        <h2>Visita registrada 🎉</h2>
 
-<p th:text="'Obrigado, ' + ${cliente.nome} + '!'"></p>
-<p th:text="'Total de visitas: ' + ${totalVisitas}"></p>
+        <p th:text="'Obrigado, ' + ${cliente.nome} + '!'"></p>
 
-<a th:href="@{'/c/' + ${empresa.id}}">Registrar nova visita</a>
+        <div class="progress">
+            <div class="progress-bar"
+                 th:style="'width:' + (${totalVisitas} * 10) + '%'">
+            </div>
+        </div>
+
+        <p th:text="${totalVisitas} + ' / 10 visitas'"></p>
+        <p class="muted">Faltam poucas visitas para sua recompensa</p>
+
+        <a th:href="@{'/c/' + ${empresa.id}}">Registrar outra visita</a>
+    </div>
+</div>
 
 </body>
 </html>

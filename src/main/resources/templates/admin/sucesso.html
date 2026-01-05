@@ -1,1 +1,21 @@
-<h2>Resgate confirmado com sucesso!</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmado</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card text-center">
+        <h2 style="color:#16a34a;">✔ Resgate confirmado</h2>
+
+        <p><strong>Cliente:</strong> <span th:text="${cliente}"></span></p>
+        <p><strong>Recompensa:</strong> <span th:text="${recompensa}"></span></p>
+        <p class="muted" th:text="${#temporals.format(data, 'dd/MM/yyyy HH:mm')}"></p>
+    </div>
+</div>
+
+</body>
+</html>

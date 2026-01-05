@@ -1,8 +1,26 @@
-<h2>Confirmar Resgate</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
 
-<p th:text="'Cliente: ' + ${resgate.cliente.nome}"></p>
-<p th:text="'Recompensa: ' + ${resgate.recompensa.nome}"></p>
+<div class="container">
+    <div class="card">
+        <h2>Confirmar resgate</h2>
 
-<form th:action="@{'/validar/' + ${token} + '/confirmar'}" method="post">
-    <button type="submit">Confirmar uso</button>
-</form>
+        <p><strong>Cliente:</strong> <span th:text="${resgate.cliente.nome}"></span></p>
+        <p><strong>Recompensa:</strong> <span th:text="${resgate.recompensa.nome}"></span></p>
+
+        <form th:action="@{'/validar/' + ${token} + '/confirmar'}" method="post">
+            <button class="btn-success" type="submit">
+                Confirmar uso
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2 th:text="'Painel - ' + ${empresa.nome}"></h2>
+
+        <table width="100%" cellpadding="8">
+            <thead>
+            <tr>
+                <th align="left">Cliente</th>
+                <th align="center">Visitas</th>
+                <th align="center">Resgate</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${dados}">
+                <td>
+                    <strong th:text="${item.nomeCliente}"></strong><br>
+                    <small th:text="${item.telefone}"></small>
+                </td>
+
+                <td align="center" th:text="${item.totalVisitas}"></td>
+
+                <td align="center">
+                    <span th:if="${item.resgateId == null}">
+                        -
+                    </span>
+
+                    <a th:if="${item.resgateId != null}"
+                       th:href="@{'/validar/' + ${item.resgateId}}"
+                       class="btn-primary">
+                        Validar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

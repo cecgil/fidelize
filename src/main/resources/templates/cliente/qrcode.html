@@ -1,5 +1,26 @@
-<h2>Apresente este QR Code</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Resgate</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
 
-<img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + ${token}}" />
+<div class="container">
+    <div class="card text-center">
+        <h2>Apresente este QR Code</h2>
 
-<p>Válido por alguns minutos</p>
+        <img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=280x280&data='
+            + ${#httpServletRequest.scheme} + '://'
+            + ${#httpServletRequest.serverName} + ':'
+            + ${#httpServletRequest.serverPort}
+            + '/validar/' + ${token}}">
+
+
+        <p class="muted">Válido por alguns minutos</p>
+    </div>
+</div>
+
+</body>
+</html>

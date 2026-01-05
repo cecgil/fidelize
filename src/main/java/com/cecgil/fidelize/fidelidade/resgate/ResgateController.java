@@ -32,7 +32,7 @@ public class ResgateController {
         this.qrService = qrService;
     }
 
-    @PostMapping("/{clienteId}/{recompensaId}")
+    @GetMapping("/{clienteId}/{recompensaId}")
     public String solicitar(@PathVariable UUID clienteId,
                              @PathVariable UUID recompensaId,
                              Model model) {

@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${empresa.nome}">Fidelidade</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
 </head>
 <body>
 
-<h2 th:text="${empresa.nome}">Empresa</h2>
-<p>Registre sua visita</p>
+<div class="container">
+    <div class="card">
+        <h2 th:text="${empresa.nome}">Empresa</h2>
+        <p class="muted">Registre sua visita e acumule benefícios</p>
 
-<form method="post">
-    <label>Nome</label><br>
-    <input type="text" name="nome" required><br><br>
+        <form method="post">
+            <label>Nome</label>
+            <input type="text" name="nome" required>
 
-    <label>Telefone</label><br>
-    <input type="text" name="telefone" required><br><br>
+            <label>Telefone</label>
+            <input type="text" name="telefone" required>
 
-    <button type="submit">Registrar visita</button>
-</form>
+            <button class="btn-primary" type="submit">
+                Registrar visita
+            </button>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

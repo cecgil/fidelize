@@ -1,5 +1,7 @@
 package com.cecgil.fidelize.fidelidade.validacao;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,17 +35,22 @@ public class ValidacaoController {
     }
 
     @PostMapping("/{token}/confirmar")
-    public String confirmar(@PathVariable String token) {
+    public String confirmar(@PathVariable String token, Model model) {
 
         QRCodeResgate qr = qrService.validar(token);
         Resgate resgate = qr.getResgate();
 
         resgate.setStatus(StatusResgate.UTILIZADO);
-        resgate.setUtilizadoEm(java.time.LocalDateTime.now());
+        resgate.setUtilizadoEm(LocalDateTime.now());
         qr.setUsado(true);
 
         resgateRepository.save(resgate);
 
+        model.addAttribute("cliente", resgate.getCliente().getNome());
+        model.addAttribute("recompensa", resgate.getRecompensa().getNome());
+        model.addAttribute("data", resgate.getUtilizadoEm());
+
         return "admin/sucesso";
     }
+
 }
