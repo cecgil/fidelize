@@ -1,5 +1,6 @@
 package com.cecgil.fidelize.cliente;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,9 @@ import com.cecgil.fidelize.empresa.Empresa;
 import com.cecgil.fidelize.empresa.EmpresaRepository;
 import com.cecgil.fidelize.fidelidade.recompensa.Recompensa;
 import com.cecgil.fidelize.fidelidade.recompensa.RecompensaRepository;
+import com.cecgil.fidelize.fidelidade.resgate.Resgate;
+import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
+import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.Visita;
 import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
 
@@ -26,15 +30,19 @@ public class ClienteController {
     private final ClienteRepository clienteRepository;
     private final VisitaRepository visitaRepository;
     private final RecompensaRepository recompensaRepository;
+    private final ResgateRepository resgateRepository;
 
     public ClienteController(EmpresaRepository empresaRepository,
                              ClienteRepository clienteRepository,
                              VisitaRepository visitaRepository,
-                             RecompensaRepository recompensaRepository) {
+                             RecompensaRepository recompensaRepository,
+                             ResgateRepository resgateRepository
+                            ) {
         this.empresaRepository = empresaRepository;
         this.clienteRepository = clienteRepository;
         this.visitaRepository = visitaRepository;
         this.recompensaRepository = recompensaRepository;
+        this.resgateRepository = resgateRepository;
     }
 
     @GetMapping("/{empresaId}")
@@ -47,7 +55,7 @@ public class ClienteController {
         return "cliente/registro";
     }
 
-    @PostMapping("/{empresaId}")
+   @PostMapping("/{empresaId}")
     public String registrarVisita(@PathVariable UUID empresaId,
                                 @RequestParam String nome,
                                 @RequestParam String telefone,
@@ -66,24 +74,60 @@ public class ClienteController {
                     return clienteRepository.save(novo);
                 });
 
+        // 1 visita a cada 24h
+        LocalDateTime limite = LocalDateTime.now().minusHours(24);
+        boolean jaRegistrou = visitaRepository.existsByClienteAndRegistradaEmAfter(cliente, limite);
+
+        if (jaRegistrou) {
+            // calcula o progresso atual SEM criar nova visita
+            LocalDateTime ultimoResgate = resgateRepository
+                    .findTopByClienteAndStatusOrderByUtilizadoEmDesc(cliente, StatusResgate.UTILIZADO)
+                    .map(Resgate::getUtilizadoEm)
+                    .orElse(LocalDateTime.MIN);
+
+            long totalVisitas = visitaRepository
+                    .countByClienteAndRegistradaEmAfter(cliente, ultimoResgate);
+
+            Recompensa recompensa = recompensaRepository
+                    .findByEmpresaAndAtivaTrue(empresa)
+                    .stream().findFirst().orElse(null);
+
+            model.addAttribute("empresa", empresa);
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("totalVisitas", totalVisitas);
+            model.addAttribute("recompensa", recompensa);
+            model.addAttribute("podeResgatar",
+                    recompensa != null && totalVisitas >= recompensa.getCustoVisitas());
+
+            // mensagem amigável
+            model.addAttribute("aviso",
+                    "Visita já registrada nas últimas 24 horas. Volte amanhã 😉");
+
+            return "cliente/sucesso";
+        }
+
+        // salva visita (permitido)
         visitaRepository.save(new Visita(null, cliente, null));
 
-        long totalVisitas = visitaRepository.countByCliente(cliente);
+        // segue fluxo normal
+        LocalDateTime ultimoResgate = resgateRepository
+                .findTopByClienteAndStatusOrderByUtilizadoEmDesc(cliente, StatusResgate.UTILIZADO)
+                .map(Resgate::getUtilizadoEm)
+                .orElse(LocalDateTime.MIN);
 
-        // busca UMA recompensa ativa (MVP)
+        long totalVisitas = visitaRepository
+                .countByClienteAndRegistradaEmAfter(cliente, ultimoResgate);
+
         Recompensa recompensa = recompensaRepository
                 .findByEmpresaAndAtivaTrue(empresa)
-                .stream()
-                .findFirst()
-                .orElse(null);
+                .stream().findFirst().orElse(null);
 
         model.addAttribute("empresa", empresa);
         model.addAttribute("cliente", cliente);
         model.addAttribute("totalVisitas", totalVisitas);
         model.addAttribute("recompensa", recompensa);
-
-        boolean podeResgatar = recompensa != null && totalVisitas >= recompensa.getCustoVisitas();
-        model.addAttribute("podeResgatar", podeResgatar);
+        model.addAttribute("podeResgatar",
+                recompensa != null && totalVisitas >= recompensa.getCustoVisitas());
 
         return "cliente/sucesso";
     }
