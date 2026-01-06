@@ -96,7 +96,6 @@ src/main/java
 - Maven
 
 ### Executar
-```bash
 mvn spring-boot:run
 A aplicação ficará disponível em:
 
