@@ -1,0 +1,82 @@
+package com.cecgil.fidelize.usuario;
+
+import com.cecgil.fidelize.empresa.Empresa;
+import com.cecgil.fidelize.empresa.EmpresaRepository;
+import com.cecgil.fidelize.empresa.Segmento;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class CadastroController {
+
+    private final EmpresaRepository empresaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder encoder;
+    private final AuthenticationManager authenticationManager;
+
+    public CadastroController(
+            EmpresaRepository empresaRepository,
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder encoder,
+            AuthenticationManager authenticationManager
+    ) {
+        this.empresaRepository = empresaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.encoder = encoder;
+        this.authenticationManager = authenticationManager;
+    }
+
+    @GetMapping("/cadastro")
+    public String formulario(Model model) {
+        model.addAttribute("segmentos", Segmento.values());
+        return "cadastro";
+    }
+
+    @PostMapping("/cadastro")
+    public String cadastrar(
+            @RequestParam String nomeEmpresa,
+            @RequestParam Segmento segmento,
+            @RequestParam String username,
+            @RequestParam String senha,
+            HttpServletRequest request,
+            Model model
+    ) {
+
+        if (usuarioRepository.findByUsername(username).isPresent()) {
+            model.addAttribute("erro", "Usuário já existe");
+            model.addAttribute("segmentos", Segmento.values());
+            return "cadastro";
+        }
+
+        Empresa empresa = new Empresa();
+        empresa.setNome(nomeEmpresa);
+        empresa.setSegmento(segmento);
+        empresa.setAtiva(true);
+        empresaRepository.save(empresa);
+
+        Usuario usuario = new Usuario();
+        usuario.setUsername(username);
+        usuario.setSenha(encoder.encode(senha));
+        usuario.setEmpresa(empresa);
+        usuario.setAtivo(true);
+        usuarioRepository.save(usuario);
+
+        // login automático
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(username, senha);
+
+        Authentication auth = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        request.getSession().setAttribute(
+                "SPRING_SECURITY_CONTEXT",
+                SecurityContextHolder.getContext()
+        );
+
+        return "redirect:/admin/home";
+    }
+}

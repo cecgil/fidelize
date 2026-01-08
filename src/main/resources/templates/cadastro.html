@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Criar conta</h2>
+
+        <p class="muted" th:if="${erro}" th:text="${erro}"></p>
+
+        <form method="post">
+            <label>Nome da empresa</label>
+            <input type="text" name="nomeEmpresa" required>
+
+            <label>Segmento</label>
+            <select name="segmento" required>
+                <option th:each="s : ${segmentos}"
+                        th:value="${s}"
+                        th:text="${s}">
+                </option>
+            </select>
+
+            <label>Usuário</label>
+            <input type="text" name="username" required>
+
+            <label>Senha</label>
+            <input type="password" name="senha" required>
+
+            <button class="btn-primary">Criar conta</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
