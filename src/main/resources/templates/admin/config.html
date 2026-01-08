@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurações</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Configurações da fidelidade</h2>
+
+        <form method="post" th:object="${empresa}">
+
+            <label>Visitas para resgatar recompensa</label>
+            <input type="number" th:field="*{visitasParaRecompensa}" min="1" required>
+
+            <label>Intervalo mínimo entre visitas (horas)</label>
+            <input type="number" th:field="*{intervaloMinimoHoras}" min="1" required>
+
+            <label>
+                <input type="checkbox" th:field="*{fidelidadeAtiva}">
+                Fidelidade ativa
+            </label>
+
+            <button class="btn-primary" style="margin-top:16px;">
+                Salvar configurações
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

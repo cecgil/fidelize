@@ -64,6 +64,11 @@ public class ClienteController {
         Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
 
+        if (!empresa.isFidelidadeAtiva()) {
+            model.addAttribute("erro", "Programa de fidelidade temporariamente indisponível");
+            return "cliente/registro";
+        }
+
         Cliente cliente = clienteRepository
                 .findByTelefoneAndEmpresa(telefone, empresa)
                 .orElseGet(() -> {
@@ -74,8 +79,8 @@ public class ClienteController {
                     return clienteRepository.save(novo);
                 });
 
-        // 1 visita a cada 24h
-        LocalDateTime limite = LocalDateTime.now().minusHours(24);
+        // Delay de visita definido pela empresa
+        LocalDateTime limite = LocalDateTime.now().minusHours(empresa.getIntervaloMinimoHoras());
         boolean jaRegistrou = visitaRepository.existsByClienteAndRegistradaEmAfter(cliente, limite);
 
         if (jaRegistrou) {
@@ -97,7 +102,7 @@ public class ClienteController {
             model.addAttribute("totalVisitas", totalVisitas);
             model.addAttribute("recompensa", recompensa);
             model.addAttribute("podeResgatar",
-                    recompensa != null && totalVisitas >= recompensa.getCustoVisitas());
+                    recompensa != null && totalVisitas >= empresa.getVisitasParaRecompensa());
 
             // mensagem amigável
             model.addAttribute("aviso",

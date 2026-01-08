@@ -22,4 +22,13 @@ public class Empresa {
     private Segmento segmento;
 
     private boolean ativa = true;
+
+    @Column(nullable = false)
+    private int visitasParaRecompensa = 10;
+
+    @Column(nullable = false)
+    private int intervaloMinimoHoras = 24;
+
+    @Column(nullable = false)
+    private boolean fidelidadeAtiva = true;
 }
