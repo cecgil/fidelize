@@ -135,6 +135,34 @@ Copiar código
 ✔ Pronto para testes com usuários reais
 ✔ Base sólida para evolução como SaaS
 
+ROTAS DA APLICAÇÃO:
+
+GET     /
+
+GET     /cadastro
+POST    /cadastro
+
+GET     /login
+POST    /login
+POST    /logout
+
+GET     /c/{empresaId}
+POST    /c/{empresaId}
+
+POST    /resgate/{clienteId}/{recompensaId}
+
+GET     /validar/{token}
+POST    /validar/{token}/confirmar
+
+GET     /admin/home
+GET     /admin/{empresaId}
+
+GET     /admin/config
+POST    /admin/config
+
+GET     /h2
+
+
 🔜 Próximos Passos (Planejados)
 
 Múltiplas recompensas por empresa
