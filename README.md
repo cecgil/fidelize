@@ -137,8 +137,6 @@ Copiar código
 
 🔜 Próximos Passos (Planejados)
 
-Login do dono
-
 Múltiplas recompensas por empresa
 
 Configuração de regras por empresa
