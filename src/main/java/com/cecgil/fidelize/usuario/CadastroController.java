@@ -5,6 +5,7 @@ import com.cecgil.fidelize.empresa.EmpresaRepository;
 import com.cecgil.fidelize.empresa.Segmento;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;

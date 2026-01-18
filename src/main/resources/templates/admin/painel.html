@@ -8,41 +8,103 @@
 <body>
 
 <div class="container">
+
     <div class="card">
         <h2 th:text="'Painel - ' + ${empresa.nome}"></h2>
+        <p class="muted">Visão geral do programa de fidelidade</p>
 
-        <table width="100%" cellpadding="8">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+            <div class="card" style="padding:14px; flex:1;">
+                <div class="muted">Clientes</div>
+                <div style="font-size:22px; font-weight:700;" th:text="${resumo.totalClientes()}"></div>
+            </div>
+            <div class="card" style="padding:14px; flex:1;">
+                <div class="muted">Visitas</div>
+                <div style="font-size:22px; font-weight:700;" th:text="${resumo.totalVisitas()}"></div>
+            </div>
+            <div class="card" style="padding:14px; flex:1;">
+                <div class="muted">Resgates</div>
+                <div style="font-size:22px; font-weight:700;" th:text="${resumo.totalResgatesUtilizados()}"></div>
+            </div>
+        </div>
+
+        <div style="margin-top:16px;">
+            <a class="btn-primary"
+               href="/admin/recompensas"
+               style="display:block; padding:12px 14px; border-radius:12px; text-align:center;">
+                Gerenciar recompensas
+            </a>
+        </div>
+
+        <div style="margin-top:10px;">
+            <a th:href="@{/admin/config}"
+               style="display:block; text-align:center;">
+                Configurações da empresa
+            </a>
+        </div>
+    </div>
+
+    <!-- Últimos resgates -->
+    <div class="card" style="margin-top:20px;">
+        <h2>Últimos resgates</h2>
+
+        <div th:if="${#lists.isEmpty(ultimosResgates)}" class="muted">
+            Nenhum resgate registrado ainda.
+        </div>
+
+        <table th:if="${!#lists.isEmpty(ultimosResgates)}">
             <thead>
             <tr>
-                <th align="left">Cliente</th>
-                <th align="center">Visitas</th>
-                <th align="center">Resgate</th>
+                <th>Cliente</th>
+                <th>Recompensa</th>
+                <th style="text-align:right;">Data</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${dados}">
+            <tr th:each="r : ${ultimosResgates}">
+                <td th:text="${r.clienteNome()}"></td>
+                <td th:text="${r.recompensaNome()}"></td>
+                <td style="text-align:right;" th:text="${#temporals.format(r.utilizadoEm(), 'dd/MM HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Clientes -->
+    <div class="card" style="margin-top:20px;">
+        <h2>Clientes</h2>
+
+        <div th:if="${#lists.isEmpty(clientes)}" class="muted">
+            Nenhum cliente ainda.
+        </div>
+
+        <table th:if="${!#lists.isEmpty(clientes)}">
+            <thead>
+            <tr>
+                <th>Cliente</th>
+                <th style="text-align:center;">Ciclo</th>
+                <th style="text-align:right;">Última visita</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${clientes}">
                 <td>
-                    <strong th:text="${item.nomeCliente}"></strong><br>
-                    <small th:text="${item.telefone}"></small>
+                    <strong th:text="${c.nome()}"></strong><br>
+                    <small class="muted" th:text="${c.telefone()}"></small>
                 </td>
 
-                <td align="center" th:text="${item.totalVisitas}"></td>
+                <td style="text-align:center; font-weight:700;" th:text="${c.cicloAtualVisitas()}"></td>
 
-                <td align="center">
-                    <span th:if="${item.resgateId == null}">
-                        -
-                    </span>
-
-                    <a th:if="${item.resgateId != null}"
-                       th:href="@{'/validar/' + ${item.resgateId}}"
-                       class="btn-primary">
-                        Validar
-                    </a>
+                <td style="text-align:right;">
+                    <span th:if="${c.ultimaVisitaEm() == null}" class="muted">-</span>
+                    <span th:if="${c.ultimaVisitaEm() != null}"
+                          th:text="${#temporals.format(c.ultimaVisitaEm(), 'dd/MM HH:mm')}"></span>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+
 </div>
 
 </body>

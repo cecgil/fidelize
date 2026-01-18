@@ -1,5 +1,6 @@
 package com.cecgil.fidelize.fidelidade.resgate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,5 +15,15 @@ public interface ResgateRepository extends JpaRepository<Resgate, UUID> {
         Cliente cliente,
         StatusResgate status
     );
+
+    List<Resgate> findTop10ByClienteEmpresaIdAndStatusOrderByUtilizadoEmDesc(
+            UUID empresaId, StatusResgate status
+    );
     
+    long countByCliente_Empresa_IdAndStatus(UUID empresaId, StatusResgate status);
+
+    List<Resgate> findTop10ByCliente_Empresa_IdAndStatusOrderByUtilizadoEmDesc(
+            UUID empresaId,
+            StatusResgate status
+    );
 }

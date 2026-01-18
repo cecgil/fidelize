@@ -1,6 +1,7 @@
 package com.cecgil.fidelize.fidelidade.visita;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface VisitaRepository extends JpaRepository<Visita, UUID> {
 
         boolean existsByClienteAndRegistradaEmAfter(Cliente cliente, LocalDateTime data);
 
+        long countByClienteEmpresaId(UUID empresaId);
+
+        Optional<Visita> findTopByClienteOrderByRegistradaEmDesc(Cliente cliente);
 }
