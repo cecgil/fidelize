@@ -17,10 +17,9 @@ public class AdminHomeController {
     @GetMapping("/admin/home")
     public String home(Authentication auth) {
 
-        var usuario = usuarioRepository
-                .findByUsername(auth.getName())
-                .orElseThrow();
+        usuarioRepository.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuário inválido ou não cadastrado"));
 
-        return "redirect:/admin/" + usuario.getEmpresa().getId();
+        return "redirect:/admin/painel";
     }
 }

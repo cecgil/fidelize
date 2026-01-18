@@ -1,55 +1,48 @@
 package com.cecgil.fidelize.admin;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.cecgil.fidelize.cliente.ClienteRepository;
-import com.cecgil.fidelize.empresa.EmpresaRepository;
 import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
+import com.cecgil.fidelize.usuario.UsuarioRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
-    private final EmpresaRepository empresaRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ClienteRepository clienteRepository;
     private final VisitaRepository visitaRepository;
     private final ResgateRepository resgateRepository;
 
-    public AdminController(EmpresaRepository empresaRepository,
+    public AdminController(UsuarioRepository usuarioRepository,
                            ClienteRepository clienteRepository,
                            VisitaRepository visitaRepository,
                            ResgateRepository resgateRepository) {
-        this.empresaRepository = empresaRepository;
+        this.usuarioRepository = usuarioRepository;
         this.clienteRepository = clienteRepository;
         this.visitaRepository = visitaRepository;
         this.resgateRepository = resgateRepository;
     }
 
-    @GetMapping("/{empresaId}")
-    public String painel(@PathVariable UUID empresaId, Model model) {
+    @GetMapping("/admin/painel")
+    public String painel(org.springframework.security.core.Authentication auth, Model model) {
 
-        var empresa = empresaRepository.findById(empresaId)
-                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+        var usuario = usuarioRepository.findByUsername(auth.getName()).orElseThrow();
+        var empresa = usuario.getEmpresa();
+        var empresaId = empresa.getId();
 
-        // resumo
         long totalClientes = clienteRepository.countByEmpresaId(empresaId);
-        long totalVisitas = visitaRepository.countByClienteEmpresaId(empresaId);
+        long totalVisitas = visitaRepository.countByCliente_Empresa_Id(empresaId);
         long totalResgates = resgateRepository.countByCliente_Empresa_IdAndStatus(empresaId, StatusResgate.UTILIZADO);
 
         PainelAdminResumo resumo = new PainelAdminResumo(totalClientes, totalVisitas, totalResgates);
 
-        // últimos 10 resgates
-        List<UltimoResgateView> ultimosResgates = resgateRepository
+        var ultimosResgates = resgateRepository
                 .findTop10ByCliente_Empresa_IdAndStatusOrderByUtilizadoEmDesc(empresaId, StatusResgate.UTILIZADO)
                 .stream()
                 .map(r -> new UltimoResgateView(
@@ -59,8 +52,7 @@ public class AdminController {
                 ))
                 .toList();
 
-        // clientes + ciclo atual + última visita
-        List<ClientePainelView> clientes = clienteRepository.findByEmpresaIdOrderByNomeAsc(empresaId)
+        var clientes = clienteRepository.findByEmpresaIdOrderByNomeAsc(empresaId)
                 .stream()
                 .map(c -> {
 

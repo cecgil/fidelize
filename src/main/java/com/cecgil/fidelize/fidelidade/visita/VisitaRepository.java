@@ -15,7 +15,8 @@ public interface VisitaRepository extends JpaRepository<Visita, UUID> {
 
         boolean existsByClienteAndRegistradaEmAfter(Cliente cliente, LocalDateTime data);
 
-        long countByClienteEmpresaId(UUID empresaId);
-
         Optional<Visita> findTopByClienteOrderByRegistradaEmDesc(Cliente cliente);
+
+        long countByCliente_Empresa_Id(UUID empresaId);
+
 }

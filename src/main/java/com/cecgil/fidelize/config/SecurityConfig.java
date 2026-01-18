@@ -20,6 +20,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/cadastro",
+                    "/login",
                     "/c/**",
                     "/resgate/**",
                     "/validar/**",
@@ -37,6 +38,7 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessUrl("/login")
             );
+
 
         // liberar console H2
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
