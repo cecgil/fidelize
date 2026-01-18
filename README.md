@@ -167,7 +167,23 @@ GET     /admin/config
 
 POST    /admin/config
 
+GET     /admin/recompensas
+
+GET     /admin/recompensas/nova
+
+POST    /admin/recompensas
+
+GET     /admin/recompensas/{id}/editar
+
+POST    /admin/recompensas/{id}/editar
+
+POST    /admin/recompensas/{id}/toggle
+
+POST    /admin/recompensas/{id}/delete
+
 GET     /h2
+
+
 
 
 🔜 Próximos Passos (Planejados)

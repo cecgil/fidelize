@@ -10,4 +10,7 @@ import com.cecgil.fidelize.empresa.Empresa;
 public interface RecompensaRepository extends JpaRepository<Recompensa, UUID> {
         List<Recompensa> findByEmpresaAndAtivaTrue(Empresa empresa);
 
+        List<Recompensa> findByEmpresaOrderByAtivaDescNomeAsc(Empresa empresa);
+
+
 }

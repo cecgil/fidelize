@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recompensa</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2 th:text="${recompensa.id == null ? 'Nova recompensa' : 'Editar recompensa'}"></h2>
+
+        <!-- Criar -->
+        <form th:if="${recompensa.id == null}"
+              th:action="@{/admin/recompensas}"
+              method="post">
+
+            <label>Nome da recompensa</label>
+            <input type="text" name="nome" required placeholder="Ex: Corte grátis">
+
+            <button class="btn-primary" style="margin-top:10px;">
+                Salvar
+            </button>
+        </form>
+
+        <!-- Editar -->
+        <form th:if="${recompensa.id != null}"
+              th:action="@{'/admin/recompensas/' + ${recompensa.id} + '/editar'}"
+              method="post">
+
+            <label>Nome da recompensa</label>
+            <input type="text" name="nome" required th:value="${recompensa.nome}">
+
+            <button class="btn-primary" style="margin-top:10px;">
+                Atualizar
+            </button>
+        </form>
+
+        <div style="margin-top:18px;">
+            <a href="/admin/recompensas">← Voltar</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

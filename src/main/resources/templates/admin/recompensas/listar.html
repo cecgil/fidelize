@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recompensas</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2 th:text="'Recompensas - ' + ${empresa.nome}"></h2>
+
+        <a class="btn-primary"
+           href="/admin/recompensas/nova"
+           style="display:block; padding:12px 14px; border-radius:12px; text-align:center; margin:16px 0;">
+            + Nova recompensa
+        </a>
+
+        <div th:if="${#lists.isEmpty(recompensas)}" class="muted">
+            Nenhuma recompensa cadastrada ainda.
+        </div>
+
+        <table th:if="${!#lists.isEmpty(recompensas)}">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Status</th>
+                <th style="text-align:right;">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${recompensas}">
+                <td th:text="${r.nome}"></td>
+
+                <td>
+                    <span th:if="${r.ativa}" style="color:#16a34a; font-weight:600;">Ativa</span>
+                    <span th:if="${!r.ativa}" style="color:#6b7280; font-weight:600;">Inativa</span>
+                </td>
+
+                <td style="text-align:right;">
+                    <a th:href="@{'/admin/recompensas/' + ${r.id} + '/editar'}"
+                       style="margin-right:10px;">
+                        Editar
+                    </a>
+
+                    <form th:action="@{'/admin/recompensas/' + ${r.id} + '/toggle'}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit"
+                                style="border:none; background:none; color:#4f46e5; cursor:pointer; font-weight:600;">
+                            <span th:if="${r.ativa}">Desativar</span>
+                            <span th:if="${!r.ativa}">Ativar</span>
+                        </button>
+                    </form>
+
+                    <form th:action="@{'/admin/recompensas/' + ${r.id} + '/delete'}"
+                          method="post"
+                          style="display:inline; margin-left:10px;"
+                          onsubmit="return confirm('Deseja excluir esta recompensa?');">
+                        <button type="submit"
+                                style="border:none; background:none; color:#dc2626; cursor:pointer; font-weight:600;">
+                            Excluir
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top:18px;">
+            <a th:href="@{'/admin/' + ${empresa.id}}">← Voltar ao painel</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
