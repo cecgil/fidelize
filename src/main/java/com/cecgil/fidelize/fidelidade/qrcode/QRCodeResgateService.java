@@ -2,6 +2,9 @@ package com.cecgil.fidelize.fidelidade.qrcode;
 
 import org.springframework.stereotype.Service;
 
+import com.cecgil.fidelize.fidelidade.qrcode.exceptions.QrCodeExpiradoException;
+import com.cecgil.fidelize.fidelidade.qrcode.exceptions.QrCodeInvalidoException;
+import com.cecgil.fidelize.fidelidade.qrcode.exceptions.QrCodeJaUsadoException;
 import com.cecgil.fidelize.fidelidade.resgate.Resgate;
 
 import java.time.LocalDateTime;
@@ -26,11 +29,16 @@ public class QRCodeResgateService {
     }
 
     public QRCodeResgate validar(String token) {
-        QRCodeResgate qr = repository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("QR Code inválido"));
 
-        if (qr.isUsado() || qr.getExpiraEm().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("QR Code expirado ou já utilizado");
+        QRCodeResgate qr = repository.findByToken(token)
+                .orElseThrow(QrCodeInvalidoException::new);
+
+        if (qr.isUsado()) {
+            throw new QrCodeJaUsadoException();
+        }
+
+        if (qr.getExpiraEm() == null || qr.getExpiraEm().isBefore(LocalDateTime.now())) {
+            throw new QrCodeExpiradoException();
         }
 
         return qr;
