@@ -25,4 +25,7 @@ public class Usuario {
     private Empresa empresa;
 
     private boolean ativo = true;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ADMIN;
 }

@@ -19,10 +19,10 @@ public class UsuarioDetailsService implements UserDetailsService {
         Usuario usuario = repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        return User.builder()
+        return org.springframework.security.core.userdetails.User.builder()
                 .username(usuario.getUsername())
                 .password(usuario.getSenha())
-                .roles("ADMIN")
+                .roles(usuario.getRole().name())
                 .disabled(!usuario.isAtivo())
                 .build();
     }

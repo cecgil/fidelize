@@ -19,15 +19,20 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    "/",
                     "/cadastro",
                     "/login",
                     "/c/**",
                     "/resgate/**",
-                    "/validar/**",
-                    "/css/**",
-                    "/h2/**"
+                    "/css/**"
                 ).permitAll()
-                .requestMatchers("/admin/**").authenticated()
+
+                // Validação QR: ADMIN ou USUARIO
+                .requestMatchers("/validar/**").hasAnyRole("ADMIN", "USUARIO")
+
+                // Painel/config/recompensas: só ADMIN
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form

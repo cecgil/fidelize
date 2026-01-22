@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuários</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Usuários</h2>
+
+        <a class="btn-primary"
+           href="/admin/usuarios/novo"
+           style="display:block; padding:12px 14px; border-radius:12px; text-align:center; margin:16px 0;">
+            + Novo usuário
+        </a>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th style="text-align:right;">Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="u : ${usuarios}">
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.role}"></td>
+
+                <td>
+                    <span th:if="${u.ativo}" style="color:#16a34a; font-weight:600;">Ativo</span>
+                    <span th:if="${!u.ativo}" style="color:#6b7280; font-weight:600;">Inativo</span>
+                </td>
+
+                <td style="text-align:right;">
+                    <form th:action="@{'/admin/usuarios/' + ${u.id} + '/toggle'}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit"
+                                style="border:none; background:none; color:#4f46e5; cursor:pointer; font-weight:600;">
+                            <span th:if="${u.ativo}">Desativar</span>
+                            <span th:if="${!u.ativo}">Ativar</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top:18px;">
+            <a href="/admin/painel">← Voltar ao painel</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo usuário</title>
+    <link rel="stylesheet" th:href="@{/css/mobile.css}">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Novo usuário</h2>
+
+        <form method="post" th:action="@{/admin/usuarios}">
+            <label>Username</label>
+            <input type="text" name="username" required>
+
+            <label>Senha</label>
+            <input type="password" name="senha" required>
+
+            <label>Role</label>
+            <select name="role" required>
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+            </select>
+
+            <button class="btn-primary" style="margin-top:10px;">
+                Criar usuário
+            </button>
+        </form>
+
+        <div style="margin-top:18px;">
+            <a href="/admin/usuarios">← Voltar</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
