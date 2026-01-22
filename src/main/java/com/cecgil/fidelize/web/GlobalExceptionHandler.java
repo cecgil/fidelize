@@ -3,6 +3,8 @@ package com.cecgil.fidelize.web;
 import com.cecgil.fidelize.fidelidade.qrcode.exceptions.QrCodeExpiradoException;
 import com.cecgil.fidelize.fidelidade.qrcode.exceptions.QrCodeInvalidoException;
 import com.cecgil.fidelize.fidelidade.qrcode.exceptions.QrCodeJaUsadoException;
+import com.cecgil.fidelize.fidelidade.resgate.exceptions.ResgateNegadoException;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,5 +31,12 @@ public class GlobalExceptionHandler {
         model.addAttribute("titulo", "QR Code já utilizado");
         model.addAttribute("mensagem", "Este QR Code já foi usado e não pode ser reutilizado.");
         return "erro/qr";
+    }
+
+    @ExceptionHandler(ResgateNegadoException.class)
+    public String resgateNegado(ResgateNegadoException ex, Model model) {
+        model.addAttribute("titulo", "Resgate não disponível");
+        model.addAttribute("mensagem", ex.getMessage());
+        return "erro/qr"; // reutiliza o mesmo template (simples)
     }
 }
