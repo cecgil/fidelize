@@ -11,6 +11,8 @@ import com.cecgil.fidelize.cliente.Cliente;
 public interface ResgateRepository extends JpaRepository<Resgate, UUID> {
     Optional<Resgate> findByIdAndStatus(UUID id, StatusResgate status);
 
+    List<Resgate> findByClienteAndStatus(Cliente cliente, StatusResgate status);
+
     Optional<Resgate> findTopByClienteAndStatusOrderByUtilizadoEmDesc(
         Cliente cliente,
         StatusResgate status

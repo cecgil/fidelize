@@ -8,6 +8,7 @@ import com.cecgil.fidelize.fidelidade.recompensa.RecompensaRepository;
 import com.cecgil.fidelize.fidelidade.resgate.Resgate;
 import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.ResgateService;
+import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,19 +45,26 @@ public class ResgateController {
         Cliente cliente = clienteRepository.findById(clienteId).orElseThrow();
         Recompensa recompensa = recompensaRepository.findById(recompensaId).orElseThrow();
 
-        var empresa = cliente.getEmpresa();
+        resgateService.validarPodeResgatar(cliente.getEmpresa(), cliente, recompensa);
 
-        // ✅ valida se pode resgatar
-        resgateService.validarPodeResgatar(empresa, cliente, recompensa);
+        // Reutiliza QR válido se já existe um PENDENTE, evitando duplicatas por duplo clique / F5
+        for (Resgate pendente : resgateRepository.findByClienteAndStatus(cliente, StatusResgate.PENDENTE)) {
+            var qrValido = qrService.buscarQrValido(pendente);
+            if (qrValido.isPresent()) {
+                model.addAttribute("token", qrValido.get().getToken());
+                return "cliente/qrcode";
+            }
+            // QR expirado — marca o resgate como EXPIRADO
+            pendente.setStatus(StatusResgate.EXPIRADO);
+            resgateRepository.save(pendente);
+        }
 
         Resgate resgate = new Resgate();
         resgate.setCliente(cliente);
         resgate.setRecompensa(recompensa);
         resgateRepository.save(resgate);
 
-        var qr = qrService.gerar(resgate);
-
-        model.addAttribute("token", qr.getToken());
+        model.addAttribute("token", qrService.gerar(resgate).getToken());
         return "cliente/qrcode";
     }
 }

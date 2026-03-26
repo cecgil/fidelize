@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface QRCodeResgateRepository extends JpaRepository<QRCodeResgate, UUID> {
     Optional<QRCodeResgate> findByToken(String token);
-    
+    Optional<QRCodeResgate> findByResgate(com.cecgil.fidelize.fidelidade.resgate.Resgate resgate);
 }
