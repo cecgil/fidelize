@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Sucesso</title>
-    <p class="muted" th:if="${aviso != null}" th:text="${aviso}"></p>
     <link rel="stylesheet" th:href="@{/css/mobile.css}">
 </head>
 <body>
 
 <div class="container">
     <div class="card text-center">
-        <h2>Visita registrada 🎉</h2>
+        <h2 th:if="${aviso == null}">Visita registrada 🎉</h2>
+        <h2 th:if="${aviso != null}">Olá, <span th:text="${cliente.nome}"></span>!</h2>
 
-        <p th:text="'Obrigado, ' + ${cliente.nome} + '!'"></p>
+        <p class="muted aviso" th:if="${aviso != null}" th:text="${aviso}"></p>
+
+        <p th:text="'Obrigado, ' + ${cliente.nome} + '!'" th:if="${aviso == null}"></p>
 
         <div class="progress">
             <div class="progress-bar"
-                 th:style="'width:' + (${totalVisitas} * 10) + '%'">
+                 th:style="'width:' + (${totalVisitas} * 100 / ${empresa.visitasParaRecompensa}) + '%'">
             </div>
         </div>
 
-        <p th:text="${totalVisitas} + ' / 10 visitas'"></p>
-        <p class="muted">Faltam poucas visitas para sua recompensa</p>
+        <p th:text="${totalVisitas} + ' / ' + ${empresa.visitasParaRecompensa} + ' visitas'"></p>
+
+        <div th:if="${podeResgatar}">
+            <p class="muted">Você atingiu o número de visitas! Resgate sua recompensa.</p>
+            <form th:if="${recompensa != null}"
+                  th:action="@{'/resgate/' + ${cliente.id} + '/' + ${recompensa.id}}"
+                  method="post">
+                <button class="btn-primary" type="submit"
+                        th:text="'Resgatar: ' + ${recompensa.nome}">Resgatar</button>
+            </form>
+        </div>
+
+        <p class="muted" th:if="${!podeResgatar}">Faltam
+            <span th:text="${empresa.visitasParaRecompensa - totalVisitas}"></span>
+            visita(s) para sua recompensa</p>
 
         <a th:href="@{'/c/' + ${empresa.id}}">Registrar outra visita</a>
     </div>

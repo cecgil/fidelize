@@ -84,37 +84,12 @@ public class ClienteController {
         boolean jaRegistrou = visitaRepository.existsByClienteAndRegistradaEmAfter(cliente, limite);
 
         if (jaRegistrou) {
-            // calcula o progresso atual SEM criar nova visita
-            LocalDateTime ultimoResgate = resgateRepository
-                    .findTopByClienteAndStatusOrderByUtilizadoEmDesc(cliente, StatusResgate.UTILIZADO)
-                    .map(Resgate::getUtilizadoEm)
-                    .orElse(LocalDateTime.MIN);
-
-            long totalVisitas = visitaRepository
-                    .countByClienteAndRegistradaEmAfter(cliente, ultimoResgate);
-
-            Recompensa recompensa = recompensaRepository
-                    .findByEmpresaAndAtivaTrue(empresa)
-                    .stream().findFirst().orElse(null);
-
-            model.addAttribute("empresa", empresa);
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("totalVisitas", totalVisitas);
-            model.addAttribute("recompensa", recompensa);
-            model.addAttribute("podeResgatar",
-                    recompensa != null && totalVisitas >= empresa.getVisitasParaRecompensa());
-
-            // mensagem amigável
             model.addAttribute("aviso",
-                    "Visita já registrada nas últimas 24 horas. Volte amanhã 😉");
-
-            return "cliente/sucesso";
+                    "Visita já registrada nas últimas " + empresa.getIntervaloMinimoHoras() + " horas. Volte em breve 😉");
+        } else {
+            visitaRepository.save(new Visita(null, cliente, null));
         }
 
-        // salva visita (permitido)
-        visitaRepository.save(new Visita(null, cliente, null));
-
-        // segue fluxo normal
         LocalDateTime ultimoResgate = resgateRepository
                 .findTopByClienteAndStatusOrderByUtilizadoEmDesc(cliente, StatusResgate.UTILIZADO)
                 .map(Resgate::getUtilizadoEm)
@@ -132,7 +107,7 @@ public class ClienteController {
         model.addAttribute("totalVisitas", totalVisitas);
         model.addAttribute("recompensa", recompensa);
         model.addAttribute("podeResgatar",
-                recompensa != null && totalVisitas >= recompensa.getCustoVisitas());
+                recompensa != null && totalVisitas >= empresa.getVisitasParaRecompensa());
 
         return "cliente/sucesso";
     }
