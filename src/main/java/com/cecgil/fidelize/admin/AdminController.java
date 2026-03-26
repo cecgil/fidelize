@@ -5,9 +5,11 @@ import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
 import com.cecgil.fidelize.usuario.UsuarioRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 
@@ -29,8 +31,12 @@ public class AdminController {
         this.resgateRepository = resgateRepository;
     }
 
+    private static final int CLIENTES_POR_PAGINA = 20;
+
     @GetMapping("/admin/painel")
-    public String painel(org.springframework.security.core.Authentication auth, Model model) {
+    public String painel(org.springframework.security.core.Authentication auth,
+                         @RequestParam(defaultValue = "0") int pagina,
+                         Model model) {
 
         var usuario = usuarioRepository.findByUsername(auth.getName()).orElseThrow();
         var empresa = usuario.getEmpresa();
@@ -52,10 +58,11 @@ public class AdminController {
                 ))
                 .toList();
 
-        var clientes = clienteRepository.findByEmpresaIdOrderByNomeAsc(empresaId)
-                .stream()
-                .map(c -> {
+        var paginaClientes = clienteRepository.findByEmpresaIdOrderByNomeAsc(
+                empresaId, PageRequest.of(pagina, CLIENTES_POR_PAGINA));
 
+        var clientes = paginaClientes.stream()
+                .map(c -> {
                     LocalDateTime ultimoResgate = resgateRepository
                             .findTopByClienteAndStatusOrderByUtilizadoEmDesc(c, StatusResgate.UTILIZADO)
                             .map(r -> r.getUtilizadoEm())
@@ -68,13 +75,7 @@ public class AdminController {
                             .map(v -> v.getRegistradaEm())
                             .orElse(null);
 
-                    return new ClientePainelView(
-                            c.getId(),
-                            c.getNome(),
-                            c.getTelefone(),
-                            cicloAtual,
-                            ultimaVisitaEm
-                    );
+                    return new ClientePainelView(c.getId(), c.getNome(), c.getTelefone(), cicloAtual, ultimaVisitaEm);
                 })
                 .toList();
 
@@ -82,6 +83,8 @@ public class AdminController {
         model.addAttribute("resumo", resumo);
         model.addAttribute("clientes", clientes);
         model.addAttribute("ultimosResgates", ultimosResgates);
+        model.addAttribute("paginaAtual", paginaClientes.getNumber());
+        model.addAttribute("totalPaginas", paginaClientes.getTotalPages());
 
         return "admin/painel";
     }

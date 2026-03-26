@@ -62,6 +62,16 @@ button {
     color: #fff;
 }
 
+.btn-secondary {
+    background: #e5e7eb;
+    color: #222;
+    padding: 8px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 .progress {
     background: #e5e7eb;
     border-radius: 999px;

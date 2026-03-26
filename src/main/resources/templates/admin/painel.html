@@ -103,6 +103,20 @@
             </tr>
             </tbody>
         </table>
+
+        <div th:if="${totalPaginas > 1}" style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+            <a th:if="${paginaAtual > 0}"
+               th:href="@{/admin/painel(pagina=${paginaAtual - 1})}"
+               class="btn-secondary">← Anterior</a>
+            <span th:if="${paginaAtual == 0}"></span>
+
+            <span class="muted" th:text="${paginaAtual + 1} + ' / ' + ${totalPaginas}"></span>
+
+            <a th:if="${paginaAtual + 1 < totalPaginas}"
+               th:href="@{/admin/painel(pagina=${paginaAtual + 1})}"
+               class="btn-secondary">Próxima →</a>
+            <span th:if="${paginaAtual + 1 >= totalPaginas}"></span>
+        </div>
     </div>
 
 </div>
