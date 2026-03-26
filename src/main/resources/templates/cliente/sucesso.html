@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Sucesso</title>
-    <link rel="stylesheet" th:href="@{/css/mobile.css}">
-</head>
-<body>
+<head th:replace="~{fragments/head :: head('Visita registrada')}"></head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
 
-<div class="container">
-    <div class="card text-center">
-        <h2 th:if="${aviso == null}">Visita registrada 🎉</h2>
-        <h2 th:if="${aviso != null}">Olá, <span th:text="${cliente.nome}"></span>!</h2>
+<div class="w-full max-w-sm">
+    <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
 
-        <p class="muted aviso" th:if="${aviso != null}" th:text="${aviso}"></p>
+        <!-- Aviso: visita duplicada -->
+        <div th:if="${aviso != null}">
+            <p class="text-4xl mb-3">👋</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-1">
+                Olá, <span th:text="${cliente.nome}"></span>!
+            </h2>
+            <p class="text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mt-3 mb-4"
+               th:text="${aviso}"></p>
+        </div>
 
-        <p th:text="'Obrigado, ' + ${cliente.nome} + '!'" th:if="${aviso == null}"></p>
+        <!-- Sucesso: visita nova -->
+        <div th:if="${aviso == null}">
+            <p class="text-4xl mb-3">🎉</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-1">Visita registrada!</h2>
+            <p class="text-gray-500 text-sm mb-4" th:text="'Obrigado, ' + ${cliente.nome} + '!'"></p>
+        </div>
 
+        <!-- Progresso -->
         <div class="progress">
             <div class="progress-bar"
                  th:style="'width:' + (${totalVisitas} * 100 / ${empresa.visitasParaRecompensa}) + '%'">
             </div>
         </div>
+        <p class="text-sm text-gray-500 mb-4"
+           th:text="${totalVisitas} + ' / ' + ${empresa.visitasParaRecompensa} + ' visitas'"></p>
 
-        <p th:text="${totalVisitas} + ' / ' + ${empresa.visitasParaRecompensa} + ' visitas'"></p>
-
-        <div th:if="${podeResgatar}">
-            <p class="muted">Você atingiu o número de visitas! Resgate sua recompensa.</p>
+        <!-- Pode resgatar -->
+        <div th:if="${podeResgatar}" class="mb-4">
+            <p class="text-success font-semibold text-sm mb-3">🎁 Você atingiu o número de visitas!</p>
             <form th:if="${recompensa != null}"
                   th:action="@{'/resgate/' + ${cliente.id} + '/' + ${recompensa.id}}"
                   method="post">
-                <button class="btn-primary" type="submit"
-                        th:text="'Resgatar: ' + ${recompensa.nome}">Resgatar</button>
+                <button type="submit"
+                        class="w-full py-4 bg-success hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0"
+                        th:text="'Resgatar: ' + ${recompensa.nome}">
+                    Resgatar
+                </button>
             </form>
         </div>
 
-        <p class="muted" th:if="${!podeResgatar}">Faltam
-            <span th:text="${empresa.visitasParaRecompensa - totalVisitas}"></span>
-            visita(s) para sua recompensa</p>
+        <!-- Faltam visitas -->
+        <p th:if="${!podeResgatar}" class="text-sm text-gray-400 mb-4">
+            Faltam <strong class="text-gray-700" th:text="${empresa.visitasParaRecompensa - totalVisitas}"></strong>
+            visita(s) para sua recompensa
+        </p>
 
-        <a th:href="@{'/c/' + ${empresa.id}}">Registrar outra visita</a>
+        <a th:href="@{'/c/' + ${empresa.id}}"
+           class="text-sm text-primary hover:underline">
+            Registrar outra visita
+        </a>
     </div>
 </div>
 

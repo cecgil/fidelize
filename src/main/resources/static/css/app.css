@@ -1,0 +1,130 @@
+/* app.css — apenas componentes customizados que o Tailwind não cobre */
+
+/* ── Form elements (Tailwind preflight reseta estes) ───────────────── */
+label {
+    display: block;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 16px;
+    background: #fff;
+    color: #111827;
+    appearance: auto;
+    transition: border-color 0.15s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* ── Tables ────────────────────────────────────────────────────────── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f9fafb;
+    color: #374151;
+    vertical-align: middle;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* ── Barra de progresso ────────────────────────────────────────────── */
+.progress {
+    background: #e5e7eb;
+    border-radius: 999px;
+    height: 14px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+.progress-bar {
+    background: #4f46e5;
+    height: 100%;
+    transition: width 0.4s ease;
+    border-radius: 999px;
+}
+
+/* ── Checklist de onboarding ───────────────────────────────────────── */
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 15px;
+    color: #374151;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item.done {
+    color: #9ca3af;
+    text-decoration: line-through;
+}
+
+.check-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.check-icon.pending {
+    background: #4f46e5;
+}
+
+/* ── Link box (QR Code) ────────────────────────────────────────────── */
+.link-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    word-break: break-all;
+    color: #6b7280;
+    margin-top: 10px;
+}

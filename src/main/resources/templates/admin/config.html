@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Configurações</title>
-    <link rel="stylesheet" th:href="@{/css/mobile.css}">
-</head>
-<body>
+<head th:replace="~{fragments/head :: head('Configurações')}"></head>
+<body class="bg-gray-50 min-h-screen">
 
-<div class="container">
-    <div class="card">
-        <h2>Configurações da fidelidade</h2>
+<th:block th:replace="~{fragments/nav-admin :: nav}"></th:block>
+
+<div class="max-w-lg mx-auto px-4 py-6">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+
+        <h2 class="text-xl font-bold text-gray-900 mb-6">Configurações da fidelidade</h2>
 
         <form method="post" th:object="${empresa}">
+
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Programa de fidelidade</p>
 
             <label>Visitas para resgatar recompensa</label>
             <input type="number" th:field="*{visitasParaRecompensa}" min="1" required>
@@ -19,12 +20,17 @@
             <label>Intervalo mínimo entre visitas (horas)</label>
             <input type="number" th:field="*{intervaloMinimoHoras}" min="1" required>
 
-            <label>
-                <input type="checkbox" th:field="*{fidelidadeAtiva}">
-                Fidelidade ativa
-            </label>
+            <div class="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-4 mb-4">
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Fidelidade ativa</p>
+                    <p class="text-gray-400 text-xs mt-0.5">Desative para pausar o programa</p>
+                </div>
+                <input type="checkbox" th:field="*{fidelidadeAtiva}"
+                       class="w-5 h-5 accent-primary cursor-pointer" style="width:20px; height:20px; margin-bottom:0;">
+            </div>
 
-            <button class="btn-primary" style="margin-top:16px;">
+            <button type="submit"
+                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
                 Salvar configurações
             </button>
         </form>

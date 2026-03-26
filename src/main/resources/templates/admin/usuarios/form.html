@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Novo usuário</title>
-    <link rel="stylesheet" th:href="@{/css/mobile.css}">
-</head>
-<body>
+<head th:replace="~{fragments/head :: head('Novo usuário')}"></head>
+<body class="bg-gray-50 min-h-screen">
 
-<div class="container">
-    <div class="card">
-        <h2>Novo usuário</h2>
+<th:block th:replace="~{fragments/nav-admin :: nav}"></th:block>
+
+<div class="max-w-lg mx-auto px-4 py-6">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+
+        <h2 class="text-xl font-bold text-gray-900 mb-5">Novo usuário</h2>
 
         <form method="post" th:action="@{/admin/usuarios}">
-            <label>Username</label>
-            <input type="text" name="username" required>
+            <label>Usuário</label>
+            <input type="text" name="username" placeholder="nome de usuário" required>
 
             <label>Senha</label>
-            <input type="password" name="senha" required>
+            <input type="password" name="senha" placeholder="mínimo 6 caracteres" required>
 
-            <label>Role</label>
+            <label>Nível de acesso</label>
             <select name="role" required>
-                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                <option th:each="r : ${roles}"
+                        th:value="${r}"
+                        th:text="${r.name() == 'ADMIN' ? 'Administrador' : 'Funcionário'}">
+                </option>
             </select>
 
-            <button class="btn-primary" style="margin-top:10px;">
+            <button type="submit"
+                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
                 Criar usuário
             </button>
         </form>
 
-        <div style="margin-top:18px;">
-            <a href="/admin/usuarios">← Voltar</a>
-        </div>
+        <a href="/admin/usuarios"
+           class="block text-center text-sm text-gray-400 hover:text-gray-600 mt-4">
+            ← Voltar
+        </a>
     </div>
 </div>
 

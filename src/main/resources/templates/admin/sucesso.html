@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Confirmado</title>
-    <link rel="stylesheet" th:href="@{/css/mobile.css}">
-</head>
-<body>
+<head th:replace="~{fragments/head :: head('Resgate confirmado')}"></head>
+<body class="bg-gray-50 min-h-screen">
 
-<div class="container">
-    <div class="card text-center">
-        <h2 style="color:#16a34a;">✔ Resgate confirmado</h2>
+<th:block th:replace="~{fragments/nav-admin :: nav}"></th:block>
 
-        <p><strong>Cliente:</strong> <span th:text="${cliente}"></span></p>
-        <p><strong>Recompensa:</strong> <span th:text="${recompensa}"></span></p>
-        <p class="muted" th:text="${#temporals.format(data, 'dd/MM/yyyy HH:mm')}"></p>
+<div class="max-w-lg mx-auto px-4 py-6">
+    <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
+
+        <p class="text-5xl mb-4">✅</p>
+        <h2 class="text-xl font-bold text-success mb-5">Resgate confirmado!</h2>
+
+        <div class="bg-gray-50 rounded-xl p-4 mb-6 space-y-3 text-left">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Cliente</span>
+                <span class="font-semibold text-gray-800" th:text="${cliente}"></span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Recompensa</span>
+                <span class="font-semibold text-success" th:text="${recompensa}"></span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Data</span>
+                <span class="text-sm text-gray-600"
+                      th:text="${#temporals.format(data, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
+        </div>
+
+        <a href="/admin/painel"
+           class="block py-3 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-sm text-center">
+            Voltar ao painel
+        </a>
     </div>
 </div>
 
