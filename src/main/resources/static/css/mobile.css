@@ -70,6 +70,62 @@ button {
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
+    border: none;
+}
+
+/* Onboarding checklist */
+.onboarding {
+    border: 2px solid #4f46e5;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 15px;
+    color: #444;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item.done {
+    color: #888;
+    text-decoration: line-through;
+}
+
+.check-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.check-icon.pending {
+    background: #4f46e5;
+}
+
+/* Link box (QR Code) */
+.link-box {
+    background: #f6f7f9;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 13px;
+    word-break: break-all;
+    color: #444;
+    text-align: left;
+    margin-top: 10px;
 }
 
 .progress {

@@ -1,10 +1,12 @@
 package com.cecgil.fidelize.admin;
 
 import com.cecgil.fidelize.cliente.ClienteRepository;
+import com.cecgil.fidelize.fidelidade.recompensa.RecompensaRepository;
 import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
 import com.cecgil.fidelize.usuario.UsuarioRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +22,18 @@ public class AdminController {
     private final ClienteRepository clienteRepository;
     private final VisitaRepository visitaRepository;
     private final ResgateRepository resgateRepository;
+    private final RecompensaRepository recompensaRepository;
 
     public AdminController(UsuarioRepository usuarioRepository,
                            ClienteRepository clienteRepository,
                            VisitaRepository visitaRepository,
-                           ResgateRepository resgateRepository) {
+                           ResgateRepository resgateRepository,
+                           RecompensaRepository recompensaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.clienteRepository = clienteRepository;
         this.visitaRepository = visitaRepository;
         this.resgateRepository = resgateRepository;
+        this.recompensaRepository = recompensaRepository;
     }
 
     private static final int CLIENTES_POR_PAGINA = 20;
@@ -36,6 +41,7 @@ public class AdminController {
     @GetMapping("/admin/painel")
     public String painel(org.springframework.security.core.Authentication auth,
                          @RequestParam(defaultValue = "0") int pagina,
+                         HttpServletRequest request,
                          Model model) {
 
         var usuario = usuarioRepository.findByUsername(auth.getName()).orElseThrow();
@@ -79,12 +85,21 @@ public class AdminController {
                 })
                 .toList();
 
+        boolean temRecompensa = !recompensaRepository.findByEmpresaAndAtivaTrue(empresa).isEmpty();
+
+        int porta = request.getServerPort();
+        String baseUrl = request.getScheme() + "://" + request.getServerName()
+                + (porta == 80 || porta == 443 ? "" : ":" + porta);
+        String linkCliente = baseUrl + "/c/" + empresaId;
+
         model.addAttribute("empresa", empresa);
         model.addAttribute("resumo", resumo);
         model.addAttribute("clientes", clientes);
         model.addAttribute("ultimosResgates", ultimosResgates);
         model.addAttribute("paginaAtual", paginaClientes.getNumber());
         model.addAttribute("totalPaginas", paginaClientes.getTotalPages());
+        model.addAttribute("temRecompensa", temRecompensa);
+        model.addAttribute("linkCliente", linkCliente);
 
         return "admin/painel";
     }

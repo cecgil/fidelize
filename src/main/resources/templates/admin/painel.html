@@ -9,6 +9,47 @@
 
 <div class="container">
 
+    <!-- Onboarding: mostrado enquanto não há clientes -->
+    <div class="card onboarding" th:if="${resumo.totalClientes() == 0}" style="margin-bottom:20px;">
+        <h2>Primeiros passos</h2>
+        <p class="muted">Siga os passos abaixo para começar a fidelizar seus clientes.</p>
+
+        <div class="checklist-item done">
+            <span class="check-icon">✓</span>
+            <span>Empresa criada</span>
+        </div>
+
+        <div th:class="${temRecompensa} ? 'checklist-item done' : 'checklist-item'">
+            <span class="check-icon" th:if="${temRecompensa}">✓</span>
+            <span class="check-icon pending" th:if="${!temRecompensa}">2</span>
+            <span th:if="${temRecompensa}">Recompensa criada</span>
+            <a th:if="${!temRecompensa}" href="/admin/recompensas/nova">Criar primeira recompensa</a>
+        </div>
+
+        <div class="checklist-item">
+            <span class="check-icon pending">3</span>
+            <span>Coloque o QR Code na recepção da sua loja (veja abaixo)</span>
+        </div>
+    </div>
+
+    <!-- QR Code da loja -->
+    <div class="card" style="margin-bottom:20px; text-align:center;">
+        <h2>QR Code da sua loja</h2>
+        <p class="muted">Seus clientes escaneiam este código para registrar visitas.</p>
+
+        <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + ${linkCliente}"
+             alt="QR Code" style="width:200px; height:200px; margin:12px auto; display:block; border-radius:8px;">
+
+        <div class="link-box" id="linkClienteTexto" th:text="${linkCliente}"></div>
+
+        <button class="btn-secondary"
+                onclick="navigator.clipboard.writeText(document.getElementById('linkClienteTexto').textContent).then(function(){ document.getElementById('copiadoMsg').style.display='inline'; setTimeout(function(){ document.getElementById('copiadoMsg').style.display='none'; }, 2000); })"
+                style="margin-top:10px; width:100%; cursor:pointer;">
+            Copiar link
+        </button>
+        <span id="copiadoMsg" class="muted" style="display:none; margin-top:6px; display:none;">Link copiado!</span>
+    </div>
+
     <div class="card">
         <h2 th:text="'Painel - ' + ${empresa.nome}"></h2>
         <p class="muted">Visão geral do programa de fidelidade</p>
