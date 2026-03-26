@@ -6,11 +6,11 @@
 <div class="w-full max-w-sm">
     <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
 
-        <p class="text-4xl mb-3">📱</p>
-        <h2 class="text-xl font-bold text-gray-900 mb-1">Apresente este QR Code</h2>
-        <p class="text-sm text-gray-400 mb-5">Mostre para o atendente confirmar sua recompensa</p>
+        <h2 class="text-xl font-bold text-gray-900 mb-1">Apresente ao atendente</h2>
+        <p class="text-sm text-gray-400 mb-5">Mostre este QR Code para confirmar sua recompensa</p>
 
-        <div class="bg-gray-50 rounded-2xl p-4 inline-block mb-4">
+        <!-- QR Code -->
+        <div id="qr-container" class="bg-gray-50 rounded-2xl p-4 inline-block mb-4 transition-opacity duration-500">
             <img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='
                 + ${#httpServletRequest.scheme} + '://'
                 + ${#httpServletRequest.serverName} + ':'
@@ -20,11 +20,59 @@
                  class="w-60 h-60 rounded-xl">
         </div>
 
-        <p class="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-            ⏱ Válido por 5 minutos
-        </p>
+        <!-- Countdown -->
+        <div id="timer-box"
+             class="flex items-center justify-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-2">
+            <span class="text-amber-500 text-sm">⏱</span>
+            <span class="text-amber-700 font-semibold text-sm">Expira em</span>
+            <span id="countdown" class="text-amber-700 font-bold text-sm tabular-nums">5:00</span>
+        </div>
+
+        <!-- Mensagem de expirado (oculta inicialmente) -->
+        <div id="expired-msg" class="hidden bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <p class="text-red-600 font-semibold text-sm">⚠️ QR Code expirado</p>
+            <p class="text-red-400 text-xs mt-0.5">Volte à tela anterior e solicite um novo.</p>
+        </div>
+
+        <p class="text-xs text-gray-300 mt-4">Mantenha a tela acesa</p>
     </div>
 </div>
+
+<script>
+    let totalSeconds = 300;
+    const countdownEl = document.getElementById('countdown');
+    const expiredMsg  = document.getElementById('expired-msg');
+    const timerBox    = document.getElementById('timer-box');
+    const qrContainer = document.getElementById('qr-container');
+
+    const timer = setInterval(function () {
+        totalSeconds--;
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        countdownEl.textContent = m + ':' + String(s).padStart(2, '0');
+
+        // Últimos 60 segundos: mudar para vermelho
+        if (totalSeconds <= 60 && totalSeconds > 0) {
+            timerBox.classList.replace('bg-amber-50', 'bg-red-50');
+            timerBox.classList.replace('border-amber-200', 'border-red-200');
+            countdownEl.classList.add('text-red-600');
+            timerBox.querySelector('.text-amber-700.font-semibold').classList.replace('text-amber-700', 'text-red-600');
+        }
+
+        if (totalSeconds <= 0) {
+            clearInterval(timer);
+            countdownEl.textContent = '0:00';
+            qrContainer.style.opacity = '0.2';
+            timerBox.classList.add('hidden');
+            expiredMsg.classList.remove('hidden');
+        }
+    }, 1000);
+
+    // Evita que a tela apague enquanto o QR está visível
+    if ('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').catch(function () {});
+    }
+</script>
 
 </body>
 </html>
