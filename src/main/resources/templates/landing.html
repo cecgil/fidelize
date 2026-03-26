@@ -1,107 +1,128 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head('Início')}"></head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen pb-24">
 
-<div class="max-w-lg mx-auto px-4 py-8">
+<div class="max-w-lg mx-auto px-4 pt-8 pb-4 space-y-4">
 
     <!-- HERO -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm text-center mb-4">
-        <p class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Fidelize</p>
-        <h1 class="text-2xl font-bold text-gray-900 leading-tight mb-3">
+    <div class="bg-gradient-to-br from-primary to-indigo-700 rounded-2xl p-7 text-center shadow-lg">
+        <p class="text-indigo-200 font-bold text-sm uppercase tracking-widest mb-3">Fidelize</p>
+        <h1 class="text-2xl font-bold text-white leading-tight mb-3">
             Fidelize seus clientes<br>sem complicação
         </h1>
-        <p class="text-gray-500 text-sm mb-5">
-            Sistema simples de fidelização com QR Code para
-            <strong class="text-gray-700">barbearias, oficinas e restaurantes</strong>.
+        <p class="text-indigo-200 text-sm mb-6">
+            Programa de fidelidade com QR Code para
+            <strong class="text-white">barbearias, oficinas e restaurantes</strong>.
         </p>
         <a href="/cadastro"
-           class="block py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base text-center">
+           class="block py-4 bg-white text-primary rounded-xl font-bold text-base text-center hover:opacity-90 shadow">
             Criar conta grátis
         </a>
-        <a href="/login" class="block mt-3 text-sm text-gray-400 hover:text-gray-600">
-            Já tenho conta
+        <a href="/login" class="block mt-3 text-sm text-indigo-300 hover:text-white">
+            Já tenho conta →
         </a>
     </div>
 
     <!-- COMO FUNCIONA -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm mb-4">
-        <h2 class="text-lg font-bold text-gray-900 mb-4">Como funciona</h2>
-        <ol class="space-y-3">
-            <li class="flex gap-3 items-start">
-                <span class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                <span class="text-gray-600 text-sm">O cliente escaneia o QR Code no seu estabelecimento</span>
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 mb-5">Como funciona</h2>
+        <ol class="space-y-4">
+            <li class="flex gap-4 items-start">
+                <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">📲</div>
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Cliente escaneia o QR Code</p>
+                    <p class="text-gray-400 text-xs mt-0.5">Disponível na recepção do seu estabelecimento</p>
+                </div>
             </li>
-            <li class="flex gap-3 items-start">
-                <span class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-                <span class="text-gray-600 text-sm">Registra a visita com nome e telefone</span>
+            <li class="flex gap-4 items-start">
+                <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">📝</div>
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Registra a visita</p>
+                    <p class="text-gray-400 text-xs mt-0.5">Nome e telefone. Sem app, sem cadastro</p>
+                </div>
             </li>
-            <li class="flex gap-3 items-start">
-                <span class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
-                <span class="text-gray-600 text-sm">Acumula visitas automaticamente</span>
+            <li class="flex gap-4 items-start">
+                <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">⭐</div>
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Acumula visitas</p>
+                    <p class="text-gray-400 text-xs mt-0.5">Progresso visível a cada check-in</p>
+                </div>
             </li>
-            <li class="flex gap-3 items-start">
-                <span class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
-                <span class="text-gray-600 text-sm">Ao completar o ciclo, resgata a recompensa</span>
+            <li class="flex gap-4 items-start">
+                <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">🎁</div>
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Resgata a recompensa</p>
+                    <p class="text-gray-400 text-xs mt-0.5">Ao completar o ciclo, gera um QR Code de resgate</p>
+                </div>
             </li>
-            <li class="flex gap-3 items-start">
-                <span class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">5</span>
-                <span class="text-gray-600 text-sm">Você valida o resgate com outro QR Code</span>
+            <li class="flex gap-4 items-start">
+                <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">✅</div>
+                <div>
+                    <p class="font-semibold text-gray-800 text-sm">Você valida na hora</p>
+                    <p class="text-gray-400 text-xs mt-0.5">Escaneia o QR do cliente e confirma o benefício</p>
+                </div>
             </li>
         </ol>
     </div>
 
     <!-- BENEFÍCIOS -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm mb-4">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
         <h2 class="text-lg font-bold text-gray-900 mb-4">Por que usar o Fidelize?</h2>
-        <ul class="space-y-2">
-            <li class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="text-success font-bold">✔</span> Não precisa de aplicativo
-            </li>
-            <li class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="text-success font-bold">✔</span> Não precisa de login do cliente
-            </li>
-            <li class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="text-success font-bold">✔</span> Funciona direto no celular
-            </li>
-            <li class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="text-success font-bold">✔</span> Evita fraudes e abusos
-            </li>
-            <li class="flex items-center gap-2 text-sm text-gray-600">
-                <span class="text-success font-bold">✔</span> Mais clientes voltando
-            </li>
-        </ul>
-    </div>
-
-    <!-- SEGMENTOS -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm mb-4">
-        <h2 class="text-lg font-bold text-gray-900 mb-4">Ideal para</h2>
-        <div class="grid grid-cols-3 gap-3 text-center">
-            <div class="bg-gray-50 rounded-xl p-4">
-                <div class="text-2xl mb-1">✂️</div>
-                <div class="text-sm text-gray-600 font-medium">Barbearias</div>
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
+                <span class="text-success text-lg">✔</span>
+                <span class="text-gray-700 text-sm font-medium">Não precisa de aplicativo</span>
             </div>
-            <div class="bg-gray-50 rounded-xl p-4">
-                <div class="text-2xl mb-1">🚗</div>
-                <div class="text-sm text-gray-600 font-medium">Oficinas</div>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
+                <span class="text-success text-lg">✔</span>
+                <span class="text-gray-700 text-sm font-medium">Não precisa de login do cliente</span>
             </div>
-            <div class="bg-gray-50 rounded-xl p-4">
-                <div class="text-2xl mb-1">🍽️</div>
-                <div class="text-sm text-gray-600 font-medium">Restaurantes</div>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
+                <span class="text-success text-lg">✔</span>
+                <span class="text-gray-700 text-sm font-medium">Funciona direto no celular</span>
+            </div>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
+                <span class="text-success text-lg">✔</span>
+                <span class="text-gray-700 text-sm font-medium">Evita fraudes e abusos</span>
+            </div>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
+                <span class="text-success text-lg">✔</span>
+                <span class="text-gray-700 text-sm font-medium">Mais clientes voltando</span>
             </div>
         </div>
     </div>
 
-    <!-- CTA FINAL -->
-    <div class="bg-primary rounded-2xl p-6 text-center">
-        <h2 class="text-white font-bold text-xl mb-2">Comece agora</h2>
-        <p class="text-indigo-200 text-sm mb-5">Leva menos de 2 minutos para criar sua conta.</p>
-        <a href="/cadastro"
-           class="block py-4 bg-white text-primary rounded-xl font-bold text-base text-center hover:opacity-90">
-            Criar minha conta
-        </a>
+    <!-- SEGMENTOS -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Ideal para</h2>
+        <div class="grid grid-cols-3 gap-3 text-center">
+            <div class="bg-indigo-50 rounded-xl p-4">
+                <div class="text-3xl mb-2">✂️</div>
+                <div class="text-sm text-gray-700 font-semibold">Barbearias</div>
+            </div>
+            <div class="bg-indigo-50 rounded-xl p-4">
+                <div class="text-3xl mb-2">🚗</div>
+                <div class="text-sm text-gray-700 font-semibold">Oficinas</div>
+            </div>
+            <div class="bg-indigo-50 rounded-xl p-4">
+                <div class="text-3xl mb-2">🍽️</div>
+                <div class="text-sm text-gray-700 font-semibold">Restaurantes</div>
+            </div>
+        </div>
     </div>
 
+    <!-- RODAPÉ -->
+    <p class="text-center text-xs text-gray-300 pb-2">© Fidelize — Fidelização simples</p>
+
+</div>
+
+<!-- CTA fixo no rodapé (mobile) -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-3 shadow-lg">
+    <a href="/cadastro"
+       class="block py-3.5 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base text-center">
+        Criar conta grátis — é gratuito
+    </a>
 </div>
 
 </body>

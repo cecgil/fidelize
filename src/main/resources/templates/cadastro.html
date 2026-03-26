@@ -1,57 +1,87 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head('Criar conta')}"></head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-8">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-10">
 
 <div class="w-full max-w-sm">
+
+    <!-- Marca -->
     <div class="text-center mb-8">
-        <p class="text-primary font-bold text-2xl">Fidelize</p>
+        <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+            <span class="text-white font-bold text-2xl">F</span>
+        </div>
+        <p class="text-gray-900 font-bold text-xl">Fidelize</p>
         <p class="text-gray-400 text-sm mt-1">Crie sua conta em 2 minutos</p>
     </div>
 
     <div class="bg-white rounded-2xl p-6 shadow-sm">
 
         <div th:if="${erro}"
-             class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4"
+             class="flex items-start gap-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-5"
              th:text="${erro}">
         </div>
 
         <form method="post">
 
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Dados da empresa</p>
+            <!-- Seção 1: Empresa -->
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</div>
+                <p class="text-sm font-semibold text-gray-700">Dados da empresa</p>
+            </div>
 
             <label>Nome da empresa</label>
-            <input type="text" name="nomeEmpresa" placeholder="Ex: Barbearia do João" required>
+            <input type="text" name="nomeEmpresa" placeholder="Ex: Barbearia do João" required autocomplete="organization">
 
-            <label>Segmento</label>
-            <select name="segmento" required>
-                <option value="" disabled selected>Selecione o segmento</option>
-                <option th:each="s : ${segmentos}"
-                        th:value="${s}"
-                        th:text="${s.name() == 'BARBEARIA' ? 'Barbearia' :
-                                   s.name() == 'OFICINA'   ? 'Oficina mecânica' :
-                                                             'Restaurante'}">
-                </option>
-            </select>
+            <label class="mb-2 block">Segmento</label>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <label th:each="s : ${segmentos}" class="cursor-pointer">
+                    <input type="radio" name="segmento" th:value="${s}" class="sr-only peer" required>
+                    <div class="peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary border-2 border-gray-200 rounded-xl p-3 text-center transition-all hover:border-gray-300">
+                        <div class="text-2xl mb-1"
+                             th:text="${s.name() == 'BARBEARIA' ? '✂️' :
+                                        s.name() == 'OFICINA'   ? '🚗' : '🍽️'}"></div>
+                        <div class="text-xs font-semibold text-gray-600"
+                             th:text="${s.name() == 'BARBEARIA' ? 'Barbearia' :
+                                        s.name() == 'OFICINA'   ? 'Oficina' : 'Restaurante'}"></div>
+                    </div>
+                </label>
+            </div>
 
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 mt-2">Dados de acesso</p>
+            <!-- Divisor -->
+            <div class="border-t border-gray-100 my-5"></div>
+
+            <!-- Seção 2: Acesso -->
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</div>
+                <p class="text-sm font-semibold text-gray-700">Dados de acesso</p>
+            </div>
 
             <label>Usuário</label>
-            <input type="text" name="username" placeholder="nome de usuário" required>
+            <input type="text" name="username" placeholder="nome de usuário" required autocomplete="username">
 
             <label>Senha</label>
-            <input type="password" name="senha" placeholder="mínimo 6 caracteres" required>
+            <div class="relative">
+                <input type="password" name="senha" id="senhaCadastro"
+                       placeholder="mínimo 6 caracteres" required autocomplete="new-password"
+                       style="margin-bottom: 0; padding-right: 70px;">
+                <button type="button"
+                        onclick="var i=document.getElementById('senhaCadastro'); i.type=i.type==='password'?'text':'password'; this.textContent=i.type==='password'?'ver':'ocultar';"
+                        class="absolute right-3 top-3 text-xs text-gray-400 hover:text-primary font-semibold border-0 bg-transparent cursor-pointer py-1 px-2">
+                    ver
+                </button>
+            </div>
+            <div class="mb-5"></div>
 
             <button type="submit"
-                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0 mt-2">
-                Criar conta
+                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
+                Criar minha conta
             </button>
         </form>
     </div>
 
-    <p class="text-center text-sm text-gray-400 mt-4">
+    <p class="text-center text-sm text-gray-400 mt-5">
         Já tem conta?
-        <a href="/login" class="text-primary font-medium hover:underline">Entrar</a>
+        <a href="/login" class="text-primary font-semibold hover:underline">Entrar</a>
     </p>
 </div>
 
