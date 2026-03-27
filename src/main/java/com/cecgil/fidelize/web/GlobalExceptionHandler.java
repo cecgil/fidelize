@@ -16,27 +16,27 @@ public class GlobalExceptionHandler {
     public String qrInvalido(Model model) {
         model.addAttribute("titulo", "QR Code inválido");
         model.addAttribute("mensagem", "Este QR Code não é válido. Gere um novo resgate e tente novamente.");
-        return "erro/qr";
+        return "error/qr";
     }
 
     @ExceptionHandler(QrCodeExpiradoException.class)
     public String qrExpirado(Model model) {
         model.addAttribute("titulo", "QR Code expirado");
         model.addAttribute("mensagem", "Este QR Code expirou. Peça para o cliente gerar novamente.");
-        return "erro/qr";
+        return "error/qr";
     }
 
     @ExceptionHandler(QrCodeJaUsadoException.class)
     public String qrUsado(Model model) {
         model.addAttribute("titulo", "QR Code já utilizado");
         model.addAttribute("mensagem", "Este QR Code já foi usado e não pode ser reutilizado.");
-        return "erro/qr";
+        return "error/qr";
     }
 
     @ExceptionHandler(ResgateNegadoException.class)
     public String resgateNegado(ResgateNegadoException ex, Model model) {
         model.addAttribute("titulo", "Resgate não disponível");
         model.addAttribute("mensagem", ex.getMessage());
-        return "erro/qr"; // reutiliza o mesmo template (simples)
+        return "error/qr"; // reutiliza o mesmo template (simples)
     }
 }

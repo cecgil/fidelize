@@ -50,6 +50,6 @@ public class EmpresaConfigController {
 
         empresaRepository.save(empresa);
 
-        return "redirect:/admin/" + empresa.getId();
+        return "redirect:/admin/painel";
     }
 }

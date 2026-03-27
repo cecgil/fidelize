@@ -5,8 +5,6 @@ import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class VisitaService {
 
@@ -20,12 +18,9 @@ public class VisitaService {
     }
 
     public long cicloAtual(Cliente cliente) {
-
-        LocalDateTime ultimoResgate = resgateRepository
+        return resgateRepository
                 .findTopByClienteAndStatusOrderByUtilizadoEmDesc(cliente, StatusResgate.UTILIZADO)
-                .map(r -> r.getUtilizadoEm())
-                .orElse(LocalDateTime.MIN);
-
-        return visitaRepository.countByClienteAndRegistradaEmAfter(cliente, ultimoResgate);
+                .map(r -> visitaRepository.countByClienteAndRegistradaEmAfter(cliente, r.getUtilizadoEm()))
+                .orElse(visitaRepository.countByCliente(cliente));
     }
 }

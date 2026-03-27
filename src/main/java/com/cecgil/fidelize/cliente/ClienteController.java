@@ -15,7 +15,6 @@ import com.cecgil.fidelize.empresa.Empresa;
 import com.cecgil.fidelize.empresa.EmpresaRepository;
 import com.cecgil.fidelize.fidelidade.recompensa.Recompensa;
 import com.cecgil.fidelize.fidelidade.recompensa.RecompensaRepository;
-import com.cecgil.fidelize.fidelidade.resgate.Resgate;
 import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.Visita;
@@ -87,16 +86,13 @@ public class ClienteController {
             model.addAttribute("aviso",
                     "Visita já registrada nas últimas " + empresa.getIntervaloMinimoHoras() + " horas. Volte em breve 😉");
         } else {
-            visitaRepository.save(new Visita(null, cliente, null));
+            visitaRepository.save(new Visita(null, cliente, LocalDateTime.now()));
         }
 
-        LocalDateTime ultimoResgate = resgateRepository
+        long totalVisitas = resgateRepository
                 .findTopByClienteAndStatusOrderByUtilizadoEmDesc(cliente, StatusResgate.UTILIZADO)
-                .map(Resgate::getUtilizadoEm)
-                .orElse(LocalDateTime.MIN);
-
-        long totalVisitas = visitaRepository
-                .countByClienteAndRegistradaEmAfter(cliente, ultimoResgate);
+                .map(r -> visitaRepository.countByClienteAndRegistradaEmAfter(cliente, r.getUtilizadoEm()))
+                .orElse(visitaRepository.countByCliente(cliente));
 
         Recompensa recompensa = recompensaRepository
                 .findByEmpresaAndAtivaTrue(empresa)

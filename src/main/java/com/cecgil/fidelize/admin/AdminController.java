@@ -5,6 +5,7 @@ import com.cecgil.fidelize.fidelidade.recompensa.RecompensaRepository;
 import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
+import com.cecgil.fidelize.fidelidade.visita.VisitaService;
 import com.cecgil.fidelize.usuario.UsuarioRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.PageRequest;
@@ -21,17 +22,20 @@ public class AdminController {
     private final UsuarioRepository usuarioRepository;
     private final ClienteRepository clienteRepository;
     private final VisitaRepository visitaRepository;
+    private final VisitaService visitaService;
     private final ResgateRepository resgateRepository;
     private final RecompensaRepository recompensaRepository;
 
     public AdminController(UsuarioRepository usuarioRepository,
                            ClienteRepository clienteRepository,
                            VisitaRepository visitaRepository,
+                           VisitaService visitaService,
                            ResgateRepository resgateRepository,
                            RecompensaRepository recompensaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.clienteRepository = clienteRepository;
         this.visitaRepository = visitaRepository;
+        this.visitaService = visitaService;
         this.resgateRepository = resgateRepository;
         this.recompensaRepository = recompensaRepository;
     }
@@ -69,12 +73,7 @@ public class AdminController {
 
         var clientes = paginaClientes.stream()
                 .map(c -> {
-                    LocalDateTime ultimoResgate = resgateRepository
-                            .findTopByClienteAndStatusOrderByUtilizadoEmDesc(c, StatusResgate.UTILIZADO)
-                            .map(r -> r.getUtilizadoEm())
-                            .orElse(LocalDateTime.MIN);
-
-                    long cicloAtual = visitaRepository.countByClienteAndRegistradaEmAfter(c, ultimoResgate);
+                    long cicloAtual = visitaService.cicloAtual(c);
 
                     LocalDateTime ultimaVisitaEm = visitaRepository
                             .findTopByClienteOrderByRegistradaEmDesc(c)
