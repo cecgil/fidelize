@@ -5,10 +5,13 @@
 
 <th:block th:replace="~{fragments/nav-admin :: nav}"></th:block>
 
-<div class="max-w-lg mx-auto px-4 py-6">
-    <div class="bg-white rounded-2xl p-6 shadow-sm">
+<div class="max-w-lg mx-auto px-4 pt-6 pb-2">
+    <p class="font-bold text-xs uppercase tracking-widest mb-1" style="color:#4f46e5">Equipe</p>
+    <h1 class="text-2xl font-black text-gray-900 mb-5">Novo usuário</h1>
+</div>
 
-        <h2 class="text-xl font-bold text-gray-900 mb-5">Novo usuário</h2>
+<div class="max-w-lg mx-auto px-4 pb-6">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
 
         <form method="post" th:action="@{/admin/usuarios}">
             <label>Usuário</label>

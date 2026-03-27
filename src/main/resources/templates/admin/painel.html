@@ -10,7 +10,7 @@
     <!-- Onboarding: mostrado enquanto não há clientes -->
     <div th:if="${resumo.totalClientes() == 0}"
          class="bg-white rounded-2xl p-6 shadow-sm border-2 border-primary">
-        <h2 class="text-lg font-bold text-gray-900 mb-1">Primeiros passos</h2>
+        <h2 class="text-lg font-black text-gray-900 mb-1">Primeiros passos</h2>
         <p class="text-sm text-gray-400 mb-4">Configure sua loja para começar a fidelizar clientes.</p>
 
         <div class="checklist-item done">
@@ -32,7 +32,8 @@
 
     <!-- QR Code da loja -->
     <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
-        <h2 class="text-lg font-bold text-gray-900 mb-1">QR Code da sua loja</h2>
+        <p class="font-bold text-xs uppercase tracking-widest mb-1" style="color:#4f46e5">Seu QR Code</p>
+        <h2 class="text-lg font-black text-gray-900 mb-1">QR Code da sua loja</h2>
         <p class="text-sm text-gray-400 mb-4">Seus clientes escaneiam este código para registrar visitas.</p>
 
         <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + ${linkCliente}"
@@ -49,19 +50,20 @@
 
     <!-- Resumo -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 mb-4" th:text="'Painel — ' + ${empresa.nome}"></h2>
+        <p class="font-bold text-xs uppercase tracking-widest mb-1" style="color:#4f46e5">Visão geral</p>
+        <h2 class="text-lg font-black text-gray-900 mb-4" th:text="'Painel — ' + ${empresa.nome}"></h2>
 
         <div class="grid grid-cols-3 gap-3 mb-5">
             <div class="bg-gray-50 rounded-xl p-3 text-center">
-                <p class="text-2xl font-bold text-gray-900" th:text="${resumo.totalClientes()}">0</p>
+                <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalClientes()}">0</p>
                 <p class="text-xs text-gray-400 mt-0.5">Clientes</p>
             </div>
             <div class="bg-gray-50 rounded-xl p-3 text-center">
-                <p class="text-2xl font-bold text-gray-900" th:text="${resumo.totalVisitas()}">0</p>
+                <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalVisitas()}">0</p>
                 <p class="text-xs text-gray-400 mt-0.5">Visitas</p>
             </div>
             <div class="bg-gray-50 rounded-xl p-3 text-center">
-                <p class="text-2xl font-bold text-gray-900" th:text="${resumo.totalResgatesUtilizados()}">0</p>
+                <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalResgatesUtilizados()}">0</p>
                 <p class="text-xs text-gray-400 mt-0.5">Resgates</p>
             </div>
         </div>
@@ -78,7 +80,7 @@
 
     <!-- Últimos resgates -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 mb-4">Últimos resgates</h2>
+        <h2 class="text-lg font-black text-gray-900 mb-4">Últimos resgates</h2>
 
         <div th:if="${#lists.isEmpty(ultimosResgates)}"
              class="text-center py-6 text-gray-400 text-sm">
@@ -106,7 +108,7 @@
 
     <!-- Clientes -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 mb-4">Clientes</h2>
+        <h2 class="text-lg font-black text-gray-900 mb-4">Clientes</h2>
 
         <div th:if="${#lists.isEmpty(clientes)}"
              class="text-center py-6 text-gray-400 text-sm">

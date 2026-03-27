@@ -13,10 +13,18 @@
                       th:text="${empresa.segmento.name() == 'BARBEARIA' ? '✂️' :
                                  empresa.segmento.name() == 'OFICINA'   ? '🚗' : '🍽️'}">🏪</span>
             </div>
-            <p class="font-bold text-xl text-gray-900" th:text="${empresa.nome}">Empresa</p>
+            <p class="font-black text-xl text-gray-900" th:text="${empresa.nome}">Empresa</p>
             <p class="text-xs text-gray-400 mt-0.5"
                th:text="${empresa.segmento.name() == 'BARBEARIA' ? 'Barbearia' :
                           empresa.segmento.name() == 'OFICINA'   ? 'Oficina mecânica' : 'Restaurante'}">
+            </p>
+        </div>
+
+        <!-- Motivação: programa de fidelidade -->
+        <div class="bg-indigo-50 rounded-xl px-4 py-3 mb-5 text-center">
+            <p class="font-bold text-xs uppercase tracking-widest mb-1" style="color:#4f46e5">Programa de fidelidade</p>
+            <p class="text-sm text-gray-700">
+                Acumule <strong style="color:#4f46e5" th:text="${empresa.visitasParaRecompensa}">10</strong> visitas e ganhe uma recompensa!
             </p>
         </div>
 
@@ -39,7 +47,7 @@
         </form>
 
         <p class="text-xs text-gray-300 text-center mt-4">
-            Acumule visitas e ganhe recompensas
+            Cada visita registrada conta para sua recompensa
         </p>
     </div>
 </div>
