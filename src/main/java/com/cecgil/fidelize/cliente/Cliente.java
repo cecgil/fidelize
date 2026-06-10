@@ -27,6 +27,8 @@ public class Cliente {
 
     private String telefone;
 
+    private String email;
+
     @ManyToOne(optional = false)
     private Empresa empresa;
 }

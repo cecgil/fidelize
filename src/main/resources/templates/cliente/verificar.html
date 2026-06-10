@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Verificar e-mail')}"></head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+
+<div class="w-full max-w-sm">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+
+        <!-- Cabeçalho -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <span class="text-3xl">📧</span>
+            </div>
+            <p class="font-black text-xl text-gray-900">Verifique seu e-mail</p>
+            <p class="text-sm text-gray-500 mt-1">
+                Enviamos um código de 6 dígitos para<br>
+                <strong class="text-gray-700" th:text="${email}"></strong>
+            </p>
+        </div>
+
+        <div th:if="${erro}"
+             class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4"
+             th:text="${erro}">
+        </div>
+
+        <form method="post" th:action="@{/c/{id}/verificar(id=${empresa.id})}">
+            <input type="hidden" name="nome"     th:value="${nome}">
+            <input type="hidden" name="telefone" th:value="${telefone}">
+            <input type="hidden" name="email"    th:value="${email}">
+
+            <label>Código de verificação</label>
+            <input type="text"
+                   name="codigo"
+                   id="codigo"
+                   placeholder="000000"
+                   maxlength="6"
+                   autocomplete="one-time-code"
+                   inputmode="numeric"
+                   pattern="\d{6}"
+                   required
+                   style="text-align:center; font-size:1.5rem; font-weight:700; letter-spacing:0.3em">
+
+            <button type="submit"
+                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
+                Confirmar
+            </button>
+        </form>
+
+        <p class="text-center mt-4">
+            <a th:href="@{/c/{id}(id=${empresa.id})}" class="text-sm text-gray-400 hover:text-gray-600">
+                ← Voltar e corrigir e-mail
+            </a>
+        </p>
+
+        <p class="text-xs text-gray-300 text-center mt-2">O código expira em 5 minutos</p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('codigo').focus();
+    document.getElementById('codigo').addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    });
+</script>
+
+</body>
+</html>

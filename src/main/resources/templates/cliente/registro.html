@@ -33,21 +33,24 @@
              th:text="${erro}">
         </div>
 
-        <form method="post">
+        <form method="post" th:action="@{/c/{id}/solicitar(id=${empresa.id})}">
             <label>Nome</label>
             <input type="text" name="nome" id="nome" placeholder="Seu nome completo" required autocomplete="name">
 
             <label>Telefone</label>
             <input type="tel" name="telefone" id="telefone" placeholder="(11) 99999-9999" required autocomplete="tel">
 
+            <label>E-mail</label>
+            <input type="email" name="email" id="email" placeholder="seu@email.com" required autocomplete="email">
+
             <button type="submit"
                     class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
-                Registrar visita
+                Enviar código de verificação
             </button>
         </form>
 
         <p class="text-xs text-gray-300 text-center mt-4">
-            Cada visita registrada conta para sua recompensa
+            Enviaremos um código para seu e-mail
         </p>
     </div>
 </div>

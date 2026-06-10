@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git restore:*)",
+      "WebSearch",
+      "WebFetch(domain:www.klientboost.com)",
+      "WebFetch(domain:www.loyoly.io)",
+      "WebFetch(domain:www.saasframe.io)",
+      "WebFetch(domain:www.friendbuy.com)",
+      "WebFetch(domain:www.restolabs.com)",
+      "WebFetch(domain:blog.simpleloyalty.com)",
+      "WebFetch(domain:joy.so)",
+      "WebFetch(domain:blog.greatpages.com.br)"
+    ]
+  }
+}

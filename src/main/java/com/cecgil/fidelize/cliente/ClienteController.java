@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cecgil.fidelize.empresa.Empresa;
 import com.cecgil.fidelize.empresa.EmpresaRepository;
@@ -19,6 +20,7 @@ import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.fidelidade.resgate.StatusResgate;
 import com.cecgil.fidelize.fidelidade.visita.Visita;
 import com.cecgil.fidelize.fidelidade.visita.VisitaRepository;
+import com.cecgil.fidelize.verificacao.OtpService;
 
 
 @Controller
@@ -30,42 +32,92 @@ public class ClienteController {
     private final VisitaRepository visitaRepository;
     private final RecompensaRepository recompensaRepository;
     private final ResgateRepository resgateRepository;
+    private final OtpService otpService;
 
     public ClienteController(EmpresaRepository empresaRepository,
                              ClienteRepository clienteRepository,
                              VisitaRepository visitaRepository,
                              RecompensaRepository recompensaRepository,
-                             ResgateRepository resgateRepository
-                            ) {
+                             ResgateRepository resgateRepository,
+                             OtpService otpService) {
         this.empresaRepository = empresaRepository;
         this.clienteRepository = clienteRepository;
         this.visitaRepository = visitaRepository;
         this.recompensaRepository = recompensaRepository;
         this.resgateRepository = resgateRepository;
+        this.otpService = otpService;
     }
+
+    // ── Etapa 1: formulário de dados ────────────────────────────────────────
 
     @GetMapping("/{empresaId}")
     public String telaCliente(@PathVariable UUID empresaId, Model model) {
-
         Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
-
         model.addAttribute("empresa", empresa);
         return "cliente/registro";
     }
 
-   @PostMapping("/{empresaId}")
-    public String registrarVisita(@PathVariable UUID empresaId,
-                                @RequestParam String nome,
-                                @RequestParam String telefone,
-                                Model model) {
+    @PostMapping("/{empresaId}/solicitar")
+    public String solicitarCodigo(@PathVariable UUID empresaId,
+                                   @RequestParam String nome,
+                                   @RequestParam String telefone,
+                                   @RequestParam String email,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
 
         Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
 
         if (!empresa.isFidelidadeAtiva()) {
+            model.addAttribute("empresa", empresa);
             model.addAttribute("erro", "Programa de fidelidade temporariamente indisponível");
             return "cliente/registro";
+        }
+
+        otpService.solicitarCodigo(empresaId, telefone, email);
+
+        redirectAttributes.addAttribute("nome", nome);
+        redirectAttributes.addAttribute("telefone", telefone);
+        redirectAttributes.addAttribute("email", email);
+        return "redirect:/c/" + empresaId + "/verificar";
+    }
+
+    // ── Etapa 2: verificação do código ──────────────────────────────────────
+
+    @GetMapping("/{empresaId}/verificar")
+    public String telaVerificacao(@PathVariable UUID empresaId,
+                                   @RequestParam String nome,
+                                   @RequestParam String telefone,
+                                   @RequestParam String email,
+                                   Model model) {
+        Empresa empresa = empresaRepository.findById(empresaId)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+        model.addAttribute("empresa", empresa);
+        model.addAttribute("nome", nome);
+        model.addAttribute("telefone", telefone);
+        model.addAttribute("email", email);
+        return "cliente/verificar";
+    }
+
+    @PostMapping("/{empresaId}/verificar")
+    public String verificarERegistrar(@PathVariable UUID empresaId,
+                                       @RequestParam String nome,
+                                       @RequestParam String telefone,
+                                       @RequestParam String email,
+                                       @RequestParam String codigo,
+                                       Model model) {
+
+        Empresa empresa = empresaRepository.findById(empresaId)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+
+        if (!otpService.validar(empresaId, telefone, codigo)) {
+            model.addAttribute("empresa", empresa);
+            model.addAttribute("nome", nome);
+            model.addAttribute("telefone", telefone);
+            model.addAttribute("email", email);
+            model.addAttribute("erro", "Código inválido ou expirado. Tente novamente.");
+            return "cliente/verificar";
         }
 
         Cliente cliente = clienteRepository
@@ -74,11 +126,16 @@ public class ClienteController {
                     Cliente novo = new Cliente();
                     novo.setNome(nome);
                     novo.setTelefone(telefone);
+                    novo.setEmail(email);
                     novo.setEmpresa(empresa);
                     return clienteRepository.save(novo);
                 });
 
-        // Delay de visita definido pela empresa
+        if (cliente.getEmail() == null) {
+            cliente.setEmail(email);
+            clienteRepository.save(cliente);
+        }
+
         LocalDateTime limite = LocalDateTime.now().minusHours(empresa.getIntervaloMinimoHoras());
         boolean jaRegistrou = visitaRepository.existsByClienteAndRegistradaEmAfter(cliente, limite);
 
