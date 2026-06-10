@@ -69,6 +69,17 @@ public class ClienteController {
         Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
 
+        // Validação de inputs
+        String erro = validarDadosCliente(nome, telefone, email);
+        if (erro != null) {
+            model.addAttribute("empresa", empresa);
+            model.addAttribute("erro", erro);
+            model.addAttribute("nome", nome);
+            model.addAttribute("telefone", telefone);
+            model.addAttribute("email", email);
+            return "cliente/registro";
+        }
+
         if (!empresa.isFidelidadeAtiva()) {
             model.addAttribute("empresa", empresa);
             model.addAttribute("erro", "Programa de fidelidade temporariamente indisponível");
@@ -77,26 +88,38 @@ public class ClienteController {
 
         otpService.solicitarCodigo(empresaId, telefone, email);
 
-        redirectAttributes.addAttribute("nome", nome);
-        redirectAttributes.addAttribute("telefone", telefone);
-        redirectAttributes.addAttribute("email", email);
+        redirectAttributes.addFlashAttribute("nome", nome);
+        redirectAttributes.addFlashAttribute("telefone", telefone);
+        redirectAttributes.addFlashAttribute("email", email);
         return "redirect:/c/" + empresaId + "/verificar";
+    }
+
+    private String validarDadosCliente(String nome, String telefone, String email) {
+        if (nome == null || nome.isBlank()) return "Informe seu nome.";
+        if (nome.length() < 2) return "Nome deve ter pelo menos 2 caracteres.";
+        if (nome.length() > 100) return "Nome muito longo.";
+
+        String tel = telefone == null ? "" : telefone.replaceAll("\\D", "");
+        if (tel.length() < 10 || tel.length() > 11) return "Telefone inválido. Informe DDD + número.";
+
+        if (email == null || email.isBlank()) return "Informe seu e-mail.";
+        if (!email.matches("^[\\w.+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) return "E-mail inválido.";
+
+        return null;
     }
 
     // ── Etapa 2: verificação do código ──────────────────────────────────────
 
     @GetMapping("/{empresaId}/verificar")
-    public String telaVerificacao(@PathVariable UUID empresaId,
-                                   @RequestParam String nome,
-                                   @RequestParam String telefone,
-                                   @RequestParam String email,
-                                   Model model) {
+    public String telaVerificacao(@PathVariable UUID empresaId, Model model) {
+        // Dados vêm via flash attributes do redirect
+        if (!model.containsAttribute("nome") || !model.containsAttribute("telefone")) {
+            return "redirect:/c/" + empresaId;
+        }
+
         Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
         model.addAttribute("empresa", empresa);
-        model.addAttribute("nome", nome);
-        model.addAttribute("telefone", telefone);
-        model.addAttribute("email", email);
         return "cliente/verificar";
     }
 

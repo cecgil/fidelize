@@ -1,5 +1,6 @@
 package com.cecgil.fidelize.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,11 +13,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    @Value("${spring.h2.console.enabled:false}")
+    private boolean h2ConsoleEnabled;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/",
@@ -44,9 +47,10 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login")
             );
 
-
-        // liberar console H2
-        http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+        // liberar console H2 apenas em dev
+        if (h2ConsoleEnabled) {
+            http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+        }
 
         return http.build();
     }

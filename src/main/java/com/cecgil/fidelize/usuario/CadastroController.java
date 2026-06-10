@@ -48,9 +48,21 @@ public class CadastroController {
             Model model
     ) {
 
+        // Validação de inputs
+        String erro = validarCadastro(nomeEmpresa, username, senha);
+        if (erro != null) {
+            model.addAttribute("erro", erro);
+            model.addAttribute("segmentos", Segmento.values());
+            model.addAttribute("nomeEmpresa", nomeEmpresa);
+            model.addAttribute("username", username);
+            return "cadastro";
+        }
+
         if (usuarioRepository.findByUsername(username).isPresent()) {
             model.addAttribute("erro", "Usuário já existe");
             model.addAttribute("segmentos", Segmento.values());
+            model.addAttribute("nomeEmpresa", nomeEmpresa);
+            model.addAttribute("username", username);
             return "cadastro";
         }
 
@@ -79,5 +91,20 @@ public class CadastroController {
         );
 
         return "redirect:/admin/home";
+    }
+
+    private String validarCadastro(String nomeEmpresa, String username, String senha) {
+        if (nomeEmpresa == null || nomeEmpresa.isBlank()) return "Informe o nome da empresa.";
+        if (nomeEmpresa.length() < 2) return "Nome da empresa deve ter pelo menos 2 caracteres.";
+        if (nomeEmpresa.length() > 100) return "Nome da empresa muito longo.";
+
+        if (username == null || username.isBlank()) return "Informe o nome de usuário.";
+        if (username.length() < 3) return "Usuário deve ter pelo menos 3 caracteres.";
+        if (username.length() > 50) return "Usuário muito longo.";
+        if (!username.matches("^[a-zA-Z0-9._-]+$")) return "Usuário deve conter apenas letras, números, pontos, hífens ou underscores.";
+
+        if (senha == null || senha.length() < 6) return "Senha deve ter pelo menos 6 caracteres.";
+
+        return null;
     }
 }

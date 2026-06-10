@@ -35,13 +35,16 @@
 
         <form method="post" th:action="@{/c/{id}/solicitar(id=${empresa.id})}">
             <label>Nome</label>
-            <input type="text" name="nome" id="nome" placeholder="Seu nome completo" required autocomplete="name">
+            <input type="text" name="nome" id="nome" placeholder="Seu nome completo" required autocomplete="name"
+                   th:value="${nome}">
 
             <label>Telefone</label>
-            <input type="tel" name="telefone" id="telefone" placeholder="(11) 99999-9999" required autocomplete="tel">
+            <input type="tel" name="telefone" id="telefone" placeholder="(11) 99999-9999" required autocomplete="tel"
+                   th:value="${telefone}">
 
             <label>E-mail</label>
-            <input type="email" name="email" id="email" placeholder="seu@email.com" required autocomplete="email">
+            <input type="email" name="email" id="email" placeholder="seu@email.com" required autocomplete="email"
+                   th:value="${email}">
 
             <button type="submit"
                     class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">

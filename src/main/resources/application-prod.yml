@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fidelize
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:fidelize}
+    password: ${DB_PASSWORD:fidelize}
+
+  h2:
+    console:
+      enabled: false
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+  # ── Gmail SMTP ──────────────────────────────────────────────────────────────
+  # Passo a passo para configurar:
+  #   1. Acesse sua conta Google > Seguranca > Verificacao em duas etapas (ativar)
+  #   2. Depois: Seguranca > Senhas de app > criar senha para "Outro (fidelize)"
+  #   3. Defina as variaveis de ambiente MAIL_USERNAME e MAIL_PASSWORD
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

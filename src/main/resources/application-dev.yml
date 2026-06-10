@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 spring:
   datasource:
     url: jdbc:h2:mem:loyaltydb
@@ -15,7 +12,8 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    open-in-view: false
+
+  # SMTP desabilitado em dev — o EmailService faz fallback para log no console
+  mail:
+    host: localhost
+    port: 25

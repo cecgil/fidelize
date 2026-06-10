@@ -21,7 +21,7 @@
              th:text="${erro}">
         </div>
 
-        <form method="post">
+        <form method="post" th:action="@{/cadastro}">
 
             <!-- Seção 1: Empresa -->
             <div class="flex items-center gap-2 mb-4">
@@ -30,7 +30,8 @@
             </div>
 
             <label>Nome da empresa</label>
-            <input type="text" name="nomeEmpresa" placeholder="Ex: Barbearia do João" required autocomplete="organization">
+            <input type="text" name="nomeEmpresa" placeholder="Ex: Barbearia do João" required autocomplete="organization"
+                   th:value="${nomeEmpresa}">
 
             <label class="mb-2 block">Segmento</label>
             <div class="grid grid-cols-3 gap-2 mb-4">
@@ -57,7 +58,8 @@
             </div>
 
             <label>Usuário</label>
-            <input type="text" name="username" placeholder="nome de usuário" required autocomplete="username">
+            <input type="text" name="username" placeholder="nome de usuário" required autocomplete="username"
+                   th:value="${username}">
 
             <label>Senha</label>
             <div class="relative">
