@@ -20,8 +20,6 @@ public class Recompensa {
 
     private String nome;
 
-    private int custoVisitas;
-
     private boolean ativa = true;
 
     @ManyToOne(optional = false)

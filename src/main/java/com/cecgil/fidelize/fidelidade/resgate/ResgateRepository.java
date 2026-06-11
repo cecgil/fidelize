@@ -24,6 +24,8 @@ public interface ResgateRepository extends JpaRepository<Resgate, UUID> {
     
     long countByCliente_Empresa_IdAndStatus(UUID empresaId, StatusResgate status);
 
+    boolean existsByRecompensaId(UUID recompensaId);
+
     List<Resgate> findTop10ByCliente_Empresa_IdAndStatusOrderByUtilizadoEmDesc(
             UUID empresaId,
             StatusResgate status

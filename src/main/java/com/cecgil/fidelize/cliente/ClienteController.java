@@ -86,6 +86,15 @@ public class ClienteController {
             return "cliente/registro";
         }
 
+        if (otpService.isRateLimited(empresaId, telefone)) {
+            model.addAttribute("empresa", empresa);
+            model.addAttribute("erro", "Muitas solicitações. Aguarde alguns minutos antes de tentar novamente.");
+            model.addAttribute("nome", nome);
+            model.addAttribute("telefone", telefone);
+            model.addAttribute("email", email);
+            return "cliente/registro";
+        }
+
         otpService.solicitarCodigo(empresaId, telefone, email);
 
         redirectAttributes.addFlashAttribute("nome", nome);

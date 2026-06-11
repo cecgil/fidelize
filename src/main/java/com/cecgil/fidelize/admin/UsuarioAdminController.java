@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/usuarios")
@@ -64,7 +65,8 @@ public class UsuarioAdminController {
     }
 
     @PostMapping("/{id}/toggle")
-    public String toggle(Authentication auth, @PathVariable java.util.UUID id) {
+    public String toggle(Authentication auth, @PathVariable java.util.UUID id,
+                         RedirectAttributes redirectAttributes) {
 
         var admin = usuarioRepository.findByUsername(auth.getName()).orElseThrow();
 
@@ -72,6 +74,12 @@ public class UsuarioAdminController {
 
         // segurança: só mexe em usuário da mesma empresa
         if (!u.getEmpresa().getId().equals(admin.getEmpresa().getId())) {
+            return "redirect:/admin/usuarios";
+        }
+
+        // impedir admin de desativar a si mesmo
+        if (u.getId().equals(admin.getId())) {
+            redirectAttributes.addFlashAttribute("erro", "Você não pode desativar sua própria conta.");
             return "redirect:/admin/usuarios";
         }
 

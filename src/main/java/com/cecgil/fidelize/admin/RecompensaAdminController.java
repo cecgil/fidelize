@@ -2,10 +2,12 @@ package com.cecgil.fidelize.admin;
 
 import com.cecgil.fidelize.fidelidade.recompensa.Recompensa;
 import com.cecgil.fidelize.fidelidade.recompensa.RecompensaRepository;
+import com.cecgil.fidelize.fidelidade.resgate.ResgateRepository;
 import com.cecgil.fidelize.usuario.UsuarioRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -15,11 +17,14 @@ public class RecompensaAdminController {
 
     private final UsuarioRepository usuarioRepository;
     private final RecompensaRepository recompensaRepository;
+    private final ResgateRepository resgateRepository;
 
     public RecompensaAdminController(UsuarioRepository usuarioRepository,
-                                     RecompensaRepository recompensaRepository) {
+                                     RecompensaRepository recompensaRepository,
+                                     ResgateRepository resgateRepository) {
         this.usuarioRepository = usuarioRepository;
         this.recompensaRepository = recompensaRepository;
+        this.resgateRepository = resgateRepository;
     }
 
     @GetMapping
@@ -121,7 +126,8 @@ public class RecompensaAdminController {
 
     @PostMapping("/{id}/delete")
     public String deletar(org.springframework.security.core.Authentication auth,
-                          @PathVariable UUID id) {
+                          @PathVariable UUID id,
+                          RedirectAttributes redirectAttributes) {
 
         var usuario = usuarioRepository.findByUsername(auth.getName()).orElseThrow();
         var empresa = usuario.getEmpresa();
@@ -129,6 +135,12 @@ public class RecompensaAdminController {
         Recompensa recompensa = recompensaRepository.findById(id).orElseThrow();
 
         if (!recompensa.getEmpresa().getId().equals(empresa.getId())) {
+            return "redirect:/admin/recompensas";
+        }
+
+        if (resgateRepository.existsByRecompensaId(id)) {
+            redirectAttributes.addFlashAttribute("erro",
+                    "Não é possível excluir esta recompensa pois há resgates vinculados. Desative-a em vez de excluir.");
             return "redirect:/admin/recompensas";
         }
 
