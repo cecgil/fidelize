@@ -15,7 +15,9 @@
       "Bash(find /d/Programacao/fidelize -type d -not -path */target/*)",
       "Bash(./mvnw compile:*)",
       "Bash(timeout 30 ./mvnw spring-boot:run -q)",
-      "Bash(timeout 35 ./mvnw spring-boot:run -q)"
+      "Bash(timeout 35 ./mvnw spring-boot:run -q)",
+      "Bash(xargs grep:*)",
+      "Bash(./mvnw test:*)"
     ]
   }
 }
