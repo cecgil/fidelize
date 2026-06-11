@@ -1,168 +1,231 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head('Painel')}"></head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen font-sans">
 
-<th:block th:replace="~{fragments/nav-admin :: nav}"></th:block>
+<div class="admin-layout">
+    <th:block th:replace="~{fragments/nav-admin :: nav}"></th:block>
 
-<div class="max-w-lg mx-auto px-4 py-6 space-y-4">
+    <main class="admin-content">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-5 animate-fade-in">
 
-    <!-- Onboarding: mostrado enquanto não há clientes -->
-    <div th:if="${resumo.totalClientes() == 0}"
-         class="bg-white rounded-2xl p-6 shadow-sm border-2 border-primary">
-        <h2 class="text-lg font-black text-gray-900 mb-1">Primeiros passos</h2>
-        <p class="text-sm text-gray-400 mb-4">Configure sua loja para começar a fidelizar clientes.</p>
-
-        <div class="checklist-item done">
-            <span class="check-icon">✓</span>
-            <span>Empresa criada</span>
-        </div>
-        <div th:class="${temRecompensa} ? 'checklist-item done' : 'checklist-item'">
-            <span class="check-icon" th:if="${temRecompensa}">✓</span>
-            <span class="check-icon pending" th:if="${!temRecompensa}">2</span>
-            <span th:if="${temRecompensa}">Recompensa criada</span>
-            <a th:if="${!temRecompensa}" href="/admin/recompensas/nova"
-               class="text-primary font-medium hover:underline">Criar primeira recompensa</a>
-        </div>
-        <div class="checklist-item">
-            <span class="check-icon pending">3</span>
-            <span>Coloque o QR Code na recepção da sua loja (veja abaixo)</span>
-        </div>
-    </div>
-
-    <!-- QR Code da loja -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
-        <p class="font-bold text-xs uppercase tracking-widest mb-1" style="color:#4f46e5">Seu QR Code</p>
-        <h2 class="text-lg font-black text-gray-900 mb-1">QR Code da sua loja</h2>
-        <p class="text-sm text-gray-400 mb-4">Seus clientes escaneiam este código para registrar visitas.</p>
-
-        <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + ${linkCliente}"
-             alt="QR Code" class="w-48 h-48 mx-auto rounded-xl mb-3">
-
-        <div class="link-box" id="linkClienteTexto" th:text="${linkCliente}"></div>
-
-        <button onclick="navigator.clipboard.writeText(document.getElementById('linkClienteTexto').textContent).then(function(){ var m = document.getElementById('copiadoMsg'); m.classList.remove('hidden'); setTimeout(function(){ m.classList.add('hidden'); }, 2000); })"
-                class="w-full mt-3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm cursor-pointer border-0">
-            Copiar link
-        </button>
-        <p id="copiadoMsg" class="hidden text-xs text-success mt-2 font-medium">Link copiado!</p>
-    </div>
-
-    <!-- Resumo -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <p class="font-bold text-xs uppercase tracking-widest mb-1" style="color:#4f46e5">Visão geral</p>
-        <h2 class="text-lg font-black text-gray-900 mb-4" th:text="'Painel — ' + ${empresa.nome}"></h2>
-
-        <div class="grid grid-cols-3 gap-3 mb-5">
-            <div class="bg-gray-50 rounded-xl p-3 text-center">
-                <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalClientes()}">0</p>
-                <p class="text-xs text-gray-400 mt-0.5">Clientes</p>
+            <!-- Header -->
+            <div>
+                <h1 class="text-2xl font-black text-gray-900" th:text="'Painel — ' + ${empresa.nome}">Painel</h1>
+                <p class="text-sm text-gray-400 mt-0.5">Acompanhe seu programa de fidelidade</p>
             </div>
-            <div class="bg-gray-50 rounded-xl p-3 text-center">
-                <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalVisitas()}">0</p>
-                <p class="text-xs text-gray-400 mt-0.5">Visitas</p>
+
+            <!-- Onboarding: mostrado enquanto nao ha clientes -->
+            <div th:if="${resumo.totalClientes() == 0}"
+                 class="bg-white rounded-2xl p-6 shadow-sm border-2 border-primary animate-fade-in-up">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-black text-gray-900">Primeiros passos</h2>
+                        <p class="text-sm text-gray-400">Configure sua loja para comecar a fidelizar.</p>
+                    </div>
+                </div>
+
+                <div class="checklist-item done">
+                    <span class="check-icon">&#10003;</span>
+                    <span>Empresa criada</span>
+                </div>
+                <div th:class="${temRecompensa} ? 'checklist-item done' : 'checklist-item'">
+                    <span class="check-icon" th:if="${temRecompensa}">&#10003;</span>
+                    <span class="check-icon pending" th:if="${!temRecompensa}">2</span>
+                    <span th:if="${temRecompensa}">Recompensa criada</span>
+                    <a th:if="${!temRecompensa}" href="/admin/recompensas/nova"
+                       class="text-primary font-medium hover:underline">Criar primeira recompensa</a>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon pending">3</span>
+                    <span>Coloque o QR Code na recepcao da sua loja</span>
+                </div>
             </div>
-            <div class="bg-gray-50 rounded-xl p-3 text-center">
-                <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalResgatesUtilizados()}">0</p>
-                <p class="text-xs text-gray-400 mt-0.5">Resgates</p>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white rounded-2xl p-5 shadow-sm stagger-item">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalClientes()}">0</p>
+                    <p class="text-xs text-gray-400 mt-0.5 font-medium">Clientes</p>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm stagger-item">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalVisitas()}">0</p>
+                    <p class="text-xs text-gray-400 mt-0.5 font-medium">Visitas</p>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm stagger-item">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-black text-gray-900" th:text="${resumo.totalResgatesUtilizados()}">0</p>
+                    <p class="text-xs text-gray-400 mt-0.5 font-medium">Resgates</p>
+                </div>
             </div>
+
+            <!-- QR Code da loja -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-black text-gray-900">QR Code da loja</h2>
+                        <p class="text-sm text-gray-400 mt-0.5">Clientes escaneiam para registrar visitas</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-5">
+                    <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + ${linkCliente}"
+                         alt="QR Code" class="w-40 h-40 rounded-xl shadow-sm border border-gray-100">
+
+                    <div class="flex-1 w-full">
+                        <div class="link-box" id="linkClienteTexto" th:text="${linkCliente}"></div>
+                        <button onclick="navigator.clipboard.writeText(document.getElementById('linkClienteTexto').textContent).then(function(){ var m = document.getElementById('copiadoMsg'); m.classList.remove('hidden'); setTimeout(function(){ m.classList.add('hidden'); }, 2000); })"
+                                class="w-full mt-3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm cursor-pointer border-0 transition-colors">
+                            Copiar link
+                        </button>
+                        <p id="copiadoMsg" class="hidden text-xs text-success mt-2 font-medium text-center">Link copiado!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ultimos resgates -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-black text-gray-900">Ultimos resgates</h2>
+                    <a href="/admin/recompensas" class="text-sm text-primary font-semibold hover:underline">Ver todas</a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(ultimosResgates)}"
+                     class="text-center py-8">
+                    <div class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                        </svg>
+                    </div>
+                    <p class="text-gray-400 text-sm">Nenhum resgate registrado ainda.</p>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(ultimosResgates)}" class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Recompensa</th>
+                            <th style="text-align:right;">Data</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="r : ${ultimosResgates}" class="stagger-item">
+                            <td class="font-medium" th:text="${r.clienteNome()}"></td>
+                            <td>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700"
+                                      th:text="${r.recompensaNome()}"></span>
+                            </td>
+                            <td style="text-align:right;" class="text-sm text-gray-400 tabular-nums"
+                                th:text="${#temporals.format(r.utilizadoEm(), 'dd/MM HH:mm')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Clientes -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-black text-gray-900">Clientes</h2>
+                    <span class="text-xs font-semibold text-gray-400 bg-gray-100 px-2 py-1 rounded-full"
+                          th:text="${resumo.totalClientes()} + ' total'"></span>
+                </div>
+
+                <div th:if="${#lists.isEmpty(clientes)}"
+                     class="text-center py-8">
+                    <div class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <p class="text-gray-400 text-sm">Nenhum cliente ainda.</p>
+                    <p class="text-gray-300 text-xs mt-1">Compartilhe o QR Code para comecar</p>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(clientes)}" class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th style="text-align:center;">Ciclo</th>
+                            <th style="text-align:right;">Ultima visita</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c : ${clientes}" class="stagger-item">
+                            <td>
+                                <span class="font-semibold text-gray-800 text-sm" th:text="${c.nome()}"></span><br>
+                                <span class="text-xs text-gray-400" th:text="${c.telefone()}"></span>
+                            </td>
+                            <td style="text-align:center;">
+                                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-50 text-primary font-bold text-sm"
+                                      th:text="${c.cicloAtualVisitas()}"></span>
+                            </td>
+                            <td style="text-align:right;">
+                                <span th:if="${c.ultimaVisitaEm() == null}" class="text-gray-300">--</span>
+                                <span th:if="${c.ultimaVisitaEm() != null}" class="text-xs text-gray-500 tabular-nums"
+                                      th:text="${#temporals.format(c.ultimaVisitaEm(), 'dd/MM HH:mm')}"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginacao -->
+                <div th:if="${totalPaginas > 1}"
+                     class="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+                    <a th:if="${paginaAtual > 0}"
+                       th:href="@{/admin/painel(pagina=${paginaAtual - 1})}"
+                       class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-semibold transition-colors">
+                        &larr; Anterior
+                    </a>
+                    <span th:if="${paginaAtual == 0}"></span>
+
+                    <span class="text-sm text-gray-400 tabular-nums"
+                          th:text="${paginaAtual + 1} + ' / ' + ${totalPaginas}"></span>
+
+                    <a th:if="${paginaAtual + 1 < totalPaginas}"
+                       th:href="@{/admin/painel(pagina=${paginaAtual + 1})}"
+                       class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-semibold transition-colors">
+                        Proxima &rarr;
+                    </a>
+                    <span th:if="${paginaAtual + 1 >= totalPaginas}"></span>
+                </div>
+            </div>
+
         </div>
-
-        <a href="/admin/recompensas"
-           class="block py-3 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-sm text-center mb-2">
-            Gerenciar recompensas
-        </a>
-        <a href="/admin/config"
-           class="block text-center text-sm text-gray-400 hover:text-gray-600">
-            Configurações da empresa
-        </a>
-    </div>
-
-    <!-- Últimos resgates -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-lg font-black text-gray-900 mb-4">Últimos resgates</h2>
-
-        <div th:if="${#lists.isEmpty(ultimosResgates)}"
-             class="text-center py-6 text-gray-400 text-sm">
-            Nenhum resgate registrado ainda.
-        </div>
-
-        <table th:if="${!#lists.isEmpty(ultimosResgates)}">
-            <thead>
-            <tr>
-                <th>Cliente</th>
-                <th>Recompensa</th>
-                <th style="text-align:right;">Data</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="r : ${ultimosResgates}">
-                <td th:text="${r.clienteNome()}"></td>
-                <td th:text="${r.recompensaNome()}"></td>
-                <td style="text-align:right;"
-                    th:text="${#temporals.format(r.utilizadoEm(), 'dd/MM HH:mm')}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Clientes -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-lg font-black text-gray-900 mb-4">Clientes</h2>
-
-        <div th:if="${#lists.isEmpty(clientes)}"
-             class="text-center py-6 text-gray-400 text-sm">
-            Nenhum cliente ainda.
-        </div>
-
-        <table th:if="${!#lists.isEmpty(clientes)}">
-            <thead>
-            <tr>
-                <th>Cliente</th>
-                <th style="text-align:center;">Ciclo</th>
-                <th style="text-align:right;">Última visita</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="c : ${clientes}">
-                <td>
-                    <span class="font-semibold text-gray-800" th:text="${c.nome()}"></span><br>
-                    <span class="text-xs text-gray-400" th:text="${c.telefone()}"></span>
-                </td>
-                <td style="text-align:center;">
-                    <span class="font-bold text-primary" th:text="${c.cicloAtualVisitas()}"></span>
-                </td>
-                <td style="text-align:right;">
-                    <span th:if="${c.ultimaVisitaEm() == null}" class="text-gray-300">—</span>
-                    <span th:if="${c.ultimaVisitaEm() != null}" class="text-xs text-gray-500"
-                          th:text="${#temporals.format(c.ultimaVisitaEm(), 'dd/MM HH:mm')}"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <!-- Paginação -->
-        <div th:if="${totalPaginas > 1}"
-             class="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-            <a th:if="${paginaAtual > 0}"
-               th:href="@{/admin/painel(pagina=${paginaAtual - 1})}"
-               class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-semibold">
-                ← Anterior
-            </a>
-            <span th:if="${paginaAtual == 0}"></span>
-
-            <span class="text-sm text-gray-400"
-                  th:text="${paginaAtual + 1} + ' / ' + ${totalPaginas}"></span>
-
-            <a th:if="${paginaAtual + 1 < totalPaginas}"
-               th:href="@{/admin/painel(pagina=${paginaAtual + 1})}"
-               class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-semibold">
-                Próxima →
-            </a>
-            <span th:if="${paginaAtual + 1 >= totalPaginas}"></span>
-        </div>
-    </div>
-
+    </main>
 </div>
 
 </body>

@@ -1,74 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head('Seu QR Code')}"></head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 font-sans">
 
-<div class="w-full max-w-sm">
+<div class="w-full max-w-sm animate-fade-in">
     <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
 
         <h2 class="text-xl font-bold text-gray-900 mb-1">Apresente ao atendente</h2>
         <p class="text-sm text-gray-400 mb-5">Mostre este QR Code para confirmar sua recompensa</p>
 
-        <!-- QR Code -->
-        <div id="qr-container" class="bg-gray-50 rounded-2xl p-4 inline-block mb-4 transition-opacity duration-500">
-            <img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='
-                + ${#httpServletRequest.scheme} + '://'
-                + ${#httpServletRequest.serverName} + ':'
-                + ${#httpServletRequest.serverPort}
-                + '/validar/' + ${token}}"
-                 alt="QR Code de resgate"
-                 class="w-60 h-60 rounded-xl">
+        <!-- QR Code com borda estilizada -->
+        <div id="qr-container" class="relative inline-block mb-5 transition-opacity duration-500">
+            <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-4">
+                <img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data='
+                    + ${#httpServletRequest.scheme} + '://'
+                    + ${#httpServletRequest.serverName} + ':'
+                    + ${#httpServletRequest.serverPort}
+                    + '/validar/' + ${token}}"
+                     alt="QR Code de resgate"
+                     class="w-56 h-56 rounded-xl">
+            </div>
         </div>
 
-        <!-- Countdown -->
-        <div id="timer-box"
-             class="flex items-center justify-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-2">
-            <span class="text-amber-500 text-sm">⏱</span>
-            <span class="text-amber-700 font-semibold text-sm">Expira em</span>
-            <span id="countdown" class="text-amber-700 font-bold text-sm tabular-nums">5:00</span>
+        <!-- Countdown circular -->
+        <div id="timer-section" class="mb-4">
+            <div class="countdown-circle mx-auto mb-2">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                    <circle class="circle-bg" cx="40" cy="40" r="36"/>
+                    <circle class="circle-progress" id="progressCircle" cx="40" cy="40" r="36"
+                            stroke-dasharray="226.19" stroke-dashoffset="0"/>
+                </svg>
+                <span class="countdown-text text-gray-700" id="countdown">5:00</span>
+            </div>
+            <p class="text-xs text-gray-400 font-medium">Tempo restante</p>
         </div>
 
         <!-- Mensagem de expirado (oculta inicialmente) -->
-        <div id="expired-msg" class="hidden bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-            <p class="text-red-600 font-semibold text-sm">⚠️ QR Code expirado</p>
-            <p class="text-red-400 text-xs mt-0.5">Volte à tela anterior e solicite um novo.</p>
+        <div id="expired-msg" class="hidden mb-4 animate-fade-in">
+            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-4">
+                <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center mx-auto mb-2">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <p class="text-red-600 font-semibold text-sm">QR Code expirado</p>
+                <p class="text-red-400 text-xs mt-0.5">Volte a tela anterior e solicite um novo.</p>
+            </div>
         </div>
 
-        <p class="text-xs text-gray-300 mt-4">Mantenha a tela acesa</p>
+        <p class="text-xs text-gray-300">
+            <svg class="w-3.5 h-3.5 inline-block mr-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+            Mantenha a tela acesa
+        </p>
     </div>
 </div>
 
 <script>
-    let totalSeconds = 300;
-    const countdownEl = document.getElementById('countdown');
-    const expiredMsg  = document.getElementById('expired-msg');
-    const timerBox    = document.getElementById('timer-box');
-    const qrContainer = document.getElementById('qr-container');
+    var totalSeconds = 300;
+    var circumference = 2 * Math.PI * 36; // 226.19
+    var countdownEl = document.getElementById('countdown');
+    var expiredMsg  = document.getElementById('expired-msg');
+    var timerSection = document.getElementById('timer-section');
+    var qrContainer = document.getElementById('qr-container');
+    var progressCircle = document.getElementById('progressCircle');
 
-    const timer = setInterval(function () {
+    var timer = setInterval(function () {
         totalSeconds--;
-        const m = Math.floor(totalSeconds / 60);
-        const s = totalSeconds % 60;
+        var m = Math.floor(totalSeconds / 60);
+        var s = totalSeconds % 60;
         countdownEl.textContent = m + ':' + String(s).padStart(2, '0');
 
-        // Últimos 60 segundos: mudar para vermelho
+        // Update circle
+        var progress = totalSeconds / 300;
+        progressCircle.style.strokeDashoffset = circumference * (1 - progress);
+
+        // Last 60 seconds: danger
         if (totalSeconds <= 60 && totalSeconds > 0) {
-            timerBox.classList.replace('bg-amber-50', 'bg-red-50');
-            timerBox.classList.replace('border-amber-200', 'border-red-200');
+            progressCircle.classList.add('danger');
             countdownEl.classList.add('text-red-600');
-            timerBox.querySelector('.text-amber-700.font-semibold').classList.replace('text-amber-700', 'text-red-600');
+            countdownEl.classList.remove('text-gray-700');
         }
 
+        // Expired
         if (totalSeconds <= 0) {
             clearInterval(timer);
             countdownEl.textContent = '0:00';
-            qrContainer.style.opacity = '0.2';
-            timerBox.classList.add('hidden');
+            qrContainer.style.opacity = '0.15';
+            timerSection.classList.add('hidden');
             expiredMsg.classList.remove('hidden');
         }
     }, 1000);
 
-    // Evita que a tela apague enquanto o QR está visível
+    // Keep screen awake
     if ('wakeLock' in navigator) {
         navigator.wakeLock.request('screen').catch(function () {});
     }

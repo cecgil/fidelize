@@ -1,19 +1,109 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav th:fragment="nav" class="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-    <div class="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
+
+<!-- ═══ Admin Navigation Fragment ═══ -->
+<th:block th:fragment="nav">
+
+<!-- Sidebar (desktop) -->
+<aside class="admin-sidebar bg-white border-r border-gray-100 flex flex-col">
+    <div class="px-5 h-16 flex items-center border-b border-gray-100">
+        <a href="/admin/painel" class="font-black text-primary text-xl tracking-tight">Fidelize</a>
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="/admin/painel"
+           class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-primary-50 hover:text-primary">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            Painel
+        </a>
+        <a href="/admin/recompensas"
+           class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-primary-50 hover:text-primary">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+            </svg>
+            Recompensas
+        </a>
+        <a href="/admin/usuarios"
+           class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-primary-50 hover:text-primary">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            </svg>
+            Equipe
+        </a>
+        <a href="/admin/config"
+           class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-primary-50 hover:text-primary">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Config
+        </a>
+    </nav>
+
+    <!-- User section & Logout -->
+    <div class="px-3 py-4 border-t border-gray-100">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors border-0 bg-transparent cursor-pointer">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                Sair
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- Top bar (mobile) -->
+<header class="md:hidden bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+    <div class="px-4 h-14 flex items-center justify-between">
         <a href="/admin/painel" class="font-black text-primary text-lg tracking-tight">Fidelize</a>
-        <div class="flex items-center gap-4 text-sm font-medium overflow-x-auto">
-            <a href="/admin/painel" class="text-gray-500 hover:text-primary whitespace-nowrap">Painel</a>
-            <a href="/admin/recompensas" class="text-gray-500 hover:text-primary whitespace-nowrap">Recompensas</a>
-            <a href="/admin/usuarios" class="text-gray-500 hover:text-primary whitespace-nowrap">Usuários</a>
-            <a href="/admin/config" class="text-gray-500 hover:text-primary whitespace-nowrap">Config</a>
-            <form th:action="@{/logout}" method="post" class="inline m-0">
-                <button type="submit" class="bg-transparent border-0 text-red-400 hover:text-red-600 font-medium text-sm cursor-pointer p-0 whitespace-nowrap">Sair</button>
-            </form>
-        </div>
+        <form th:action="@{/logout}" method="post" class="inline m-0">
+            <button type="submit" class="flex items-center gap-1.5 bg-transparent border-0 text-red-400 hover:text-red-600 font-semibold text-sm cursor-pointer py-2 px-3 rounded-lg hover:bg-red-50 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                Sair
+            </button>
+        </form>
+    </div>
+</header>
+
+<!-- Bottom nav (mobile) -->
+<nav class="admin-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+    <div class="grid grid-cols-4 h-16">
+        <a href="/admin/painel" class="flex flex-col items-center justify-center gap-0.5 text-gray-400 hover:text-primary transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="text-[10px] font-semibold">Painel</span>
+        </a>
+        <a href="/admin/recompensas" class="flex flex-col items-center justify-center gap-0.5 text-gray-400 hover:text-primary transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+            </svg>
+            <span class="text-[10px] font-semibold">Premios</span>
+        </a>
+        <a href="/admin/usuarios" class="flex flex-col items-center justify-center gap-0.5 text-gray-400 hover:text-primary transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+            </svg>
+            <span class="text-[10px] font-semibold">Equipe</span>
+        </a>
+        <a href="/admin/config" class="flex flex-col items-center justify-center gap-0.5 text-gray-400 hover:text-primary transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="text-[10px] font-semibold">Config</span>
+        </a>
     </div>
 </nav>
+
+</th:block>
+
 </body>
 </html>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head('Criar conta')}"></head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-10">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-10 font-sans">
 
-<div class="w-full max-w-sm">
+<div class="w-full max-w-sm animate-fade-in">
 
     <!-- Marca -->
     <div class="text-center mb-8">
-        <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+        <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-primary/20">
             <span class="text-white font-black text-2xl">F</span>
         </div>
         <p class="text-gray-900 font-black text-xl tracking-tight">Fidelize</p>
@@ -17,72 +17,86 @@
     <div class="bg-white rounded-2xl p-6 shadow-sm">
 
         <div th:if="${erro}"
-             class="flex items-start gap-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-5"
-             th:text="${erro}">
+             class="flex items-start gap-2 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-5">
+            <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+            <span th:text="${erro}"></span>
         </div>
 
         <form method="post" th:action="@{/cadastro}">
 
-            <!-- Seção 1: Empresa -->
+            <!-- Secao 1: Empresa -->
             <div class="flex items-center gap-2 mb-4">
                 <div class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</div>
                 <p class="text-sm font-semibold text-gray-700">Dados da empresa</p>
             </div>
 
-            <label>Nome da empresa</label>
-            <input type="text" name="nomeEmpresa" placeholder="Ex: Barbearia do João" required autocomplete="organization"
-                   th:value="${nomeEmpresa}">
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Nome da empresa</label>
+                    <input type="text" name="nomeEmpresa" placeholder="Ex: Barbearia do Joao" required autocomplete="organization"
+                           th:value="${nomeEmpresa}" class="!mb-0">
+                </div>
 
-            <label class="mb-2 block">Segmento</label>
-            <div class="grid grid-cols-3 gap-2 mb-4">
-                <label th:each="s : ${segmentos}" class="cursor-pointer">
-                    <input type="radio" name="segmento" th:value="${s}" class="sr-only peer" required>
-                    <div class="peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:text-primary border-2 border-gray-200 rounded-xl p-3 text-center transition-all hover:border-gray-300">
-                        <div class="text-2xl mb-1"
-                             th:text="${s.name() == 'BARBEARIA' ? '✂️' :
-                                        s.name() == 'OFICINA'   ? '🚗' : '🍽️'}"></div>
-                        <div class="text-xs font-semibold text-gray-600"
-                             th:text="${s.name() == 'BARBEARIA' ? 'Barbearia' :
-                                        s.name() == 'OFICINA'   ? 'Oficina' : 'Restaurante'}"></div>
+                <div>
+                    <label class="text-sm font-semibold text-gray-700 mb-2 block">Segmento</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label th:each="s : ${segmentos}" class="cursor-pointer">
+                            <input type="radio" name="segmento" th:value="${s}" class="sr-only peer" required>
+                            <div class="peer-checked:border-primary peer-checked:bg-primary-50 peer-checked:text-primary border-2 border-gray-200 rounded-xl p-3 text-center transition-all hover:border-gray-300">
+                                <div class="text-2xl mb-1"
+                                     th:text="${s.name() == 'BARBEARIA' ? '&#9986;' :
+                                                s.name() == 'OFICINA'   ? '&#128663;' : '&#127869;'}"></div>
+                                <div class="text-xs font-semibold text-gray-600"
+                                     th:text="${s.name() == 'BARBEARIA' ? 'Barbearia' :
+                                                s.name() == 'OFICINA'   ? 'Oficina' : 'Restaurante'}"></div>
+                            </div>
+                        </label>
                     </div>
-                </label>
+                </div>
             </div>
 
             <!-- Divisor -->
             <div class="border-t border-gray-100 my-5"></div>
 
-            <!-- Seção 2: Acesso -->
+            <!-- Secao 2: Acesso -->
             <div class="flex items-center gap-2 mb-4">
                 <div class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</div>
                 <p class="text-sm font-semibold text-gray-700">Dados de acesso</p>
             </div>
 
-            <label>Usuário</label>
-            <input type="text" name="username" placeholder="nome de usuário" required autocomplete="username"
-                   th:value="${username}">
+            <div class="space-y-3">
+                <div>
+                    <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Usuario</label>
+                    <input type="text" name="username" placeholder="nome de usuario" required autocomplete="username"
+                           th:value="${username}" class="!mb-0">
+                </div>
 
-            <label>Senha</label>
-            <div class="relative">
-                <input type="password" name="senha" id="senhaCadastro"
-                       placeholder="mínimo 6 caracteres" required autocomplete="new-password"
-                       style="margin-bottom: 0; padding-right: 70px;">
-                <button type="button"
-                        onclick="var i=document.getElementById('senhaCadastro'); i.type=i.type==='password'?'text':'password'; this.textContent=i.type==='password'?'ver':'ocultar';"
-                        class="absolute right-3 top-3 text-xs text-gray-400 hover:text-primary font-semibold border-0 bg-transparent cursor-pointer py-1 px-2">
-                    ver
-                </button>
+                <div>
+                    <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Senha</label>
+                    <div class="relative">
+                        <input type="password" name="senha" id="senhaCadastro"
+                               placeholder="minimo 6 caracteres" required autocomplete="new-password"
+                               class="!mb-0 !pr-16">
+                        <button type="button"
+                                onclick="var i=document.getElementById('senhaCadastro'); i.type=i.type==='password'?'text':'password'; this.textContent=i.type==='password'?'ver':'ocultar';"
+                                class="absolute right-3 top-3 text-xs text-gray-400 hover:text-primary font-semibold border-0 bg-transparent cursor-pointer py-1 px-2 transition-colors">
+                            ver
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="mb-5"></div>
 
             <button type="submit"
-                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
+                    class="w-full mt-6 py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0 transition-opacity">
                 Criar minha conta
             </button>
         </form>
     </div>
 
     <p class="text-center text-sm text-gray-400 mt-5">
-        Já tem conta?
+        Ja tem conta?
         <a href="/login" class="text-primary font-semibold hover:underline">Entrar</a>
     </p>
 </div>

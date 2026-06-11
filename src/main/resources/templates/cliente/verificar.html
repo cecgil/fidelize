@@ -1,66 +1,164 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head('Verificar e-mail')}"></head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4 font-sans">
 
-<div class="w-full max-w-sm">
+<div class="w-full max-w-sm animate-fade-in">
     <div class="bg-white rounded-2xl p-6 shadow-sm">
 
-        <!-- Cabeçalho -->
+        <!-- Cabecalho -->
         <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <span class="text-3xl">📧</span>
+            <div class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                </svg>
             </div>
             <p class="font-black text-xl text-gray-900">Verifique seu e-mail</p>
             <p class="text-sm text-gray-500 mt-1">
-                Enviamos um código de 6 dígitos para<br>
+                Enviamos um codigo de 6 digitos para<br>
                 <strong class="text-gray-700" th:text="${email}"></strong>
             </p>
         </div>
 
-        <div th:if="${erro}"
-             class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4"
-             th:text="${erro}">
+        <!-- Indicador de etapas -->
+        <div class="flex items-center justify-center gap-2 mb-5">
+            <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded-full bg-green-500 text-white text-xs font-bold flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <span class="text-xs font-medium text-gray-400">Dados</span>
+            </div>
+            <div class="w-8 h-0.5 bg-primary rounded"></div>
+            <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center">2</div>
+                <span class="text-xs font-semibold text-primary">Verificar</span>
+            </div>
         </div>
 
-        <form method="post" th:action="@{/c/{id}/verificar(id=${empresa.id})}">
+        <div th:if="${erro}"
+             class="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+            <span th:text="${erro}"></span>
+        </div>
+
+        <form method="post" th:action="@{/c/{id}/verificar(id=${empresa.id})}" id="otpForm">
             <input type="hidden" name="nome"     th:value="${nome}">
             <input type="hidden" name="telefone" th:value="${telefone}">
             <input type="hidden" name="email"    th:value="${email}">
 
-            <label>Código de verificação</label>
-            <input type="text"
-                   name="codigo"
-                   id="codigo"
-                   placeholder="000000"
-                   maxlength="6"
-                   autocomplete="one-time-code"
-                   inputmode="numeric"
-                   pattern="\d{6}"
-                   required
-                   style="text-align:center; font-size:1.5rem; font-weight:700; letter-spacing:0.3em">
+            <label class="text-sm font-semibold text-gray-700 mb-3 block text-center">Digite o codigo</label>
 
-            <button type="submit"
-                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0">
+            <!-- 6 caixas separadas -->
+            <div class="flex justify-center gap-2 mb-2">
+                <input type="text" class="otp-box w-11 h-13 text-center text-xl font-bold rounded-xl border-1.5 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 !p-0 !mb-0"
+                       maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digito 1">
+                <input type="text" class="otp-box w-11 h-13 text-center text-xl font-bold rounded-xl border-1.5 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 !p-0 !mb-0"
+                       maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digito 2">
+                <input type="text" class="otp-box w-11 h-13 text-center text-xl font-bold rounded-xl border-1.5 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 !p-0 !mb-0"
+                       maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digito 3">
+                <input type="text" class="otp-box w-11 h-13 text-center text-xl font-bold rounded-xl border-1.5 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 !p-0 !mb-0"
+                       maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digito 4">
+                <input type="text" class="otp-box w-11 h-13 text-center text-xl font-bold rounded-xl border-1.5 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 !p-0 !mb-0"
+                       maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digito 5">
+                <input type="text" class="otp-box w-11 h-13 text-center text-xl font-bold rounded-xl border-1.5 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 !p-0 !mb-0"
+                       maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digito 6">
+            </div>
+
+            <!-- Hidden field que recebe o codigo completo -->
+            <input type="hidden" name="codigo" id="codigoHidden">
+
+            <!-- Timer visual -->
+            <p class="text-xs text-gray-400 text-center mb-5">
+                Expira em <span id="otpTimer" class="font-semibold tabular-nums text-gray-500">5:00</span>
+            </p>
+
+            <button type="submit" id="submitBtn"
+                    class="w-full py-4 bg-primary hover:opacity-90 text-white rounded-xl font-bold text-base cursor-pointer border-0 transition-opacity">
                 Confirmar
             </button>
         </form>
 
         <p class="text-center mt-4">
-            <a th:href="@{/c/{id}(id=${empresa.id})}" class="text-sm text-gray-400 hover:text-gray-600">
-                ← Voltar e corrigir e-mail
+            <a th:href="@{/c/{id}(id=${empresa.id})}" class="text-sm text-gray-400 hover:text-gray-600 font-medium">
+                &larr; Voltar e corrigir e-mail
             </a>
         </p>
-
-        <p class="text-xs text-gray-300 text-center mt-2">O código expira em 5 minutos</p>
     </div>
 </div>
 
 <script>
-    document.getElementById('codigo').focus();
-    document.getElementById('codigo').addEventListener('input', function () {
-        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    // OTP input boxes
+    const boxes = document.querySelectorAll('.otp-box');
+    const hiddenInput = document.getElementById('codigoHidden');
+
+    boxes[0].focus();
+
+    boxes.forEach(function(box, idx) {
+        box.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 1);
+            if (this.value && idx < boxes.length - 1) {
+                boxes[idx + 1].focus();
+            }
+            updateHidden();
+        });
+
+        box.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !this.value && idx > 0) {
+                boxes[idx - 1].focus();
+            }
+        });
+
+        box.addEventListener('paste', function(e) {
+            e.preventDefault();
+            var data = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+            for (var i = 0; i < data.length && i < boxes.length; i++) {
+                boxes[i].value = data[i];
+            }
+            if (data.length > 0) boxes[Math.min(data.length, boxes.length) - 1].focus();
+            updateHidden();
+        });
     });
+
+    function updateHidden() {
+        var code = '';
+        boxes.forEach(function(b) { code += b.value; });
+        hiddenInput.value = code;
+    }
+
+    // Form validation
+    document.getElementById('otpForm').addEventListener('submit', function(e) {
+        updateHidden();
+        if (hiddenInput.value.length !== 6) {
+            e.preventDefault();
+            boxes[0].focus();
+            return;
+        }
+        var btn = document.getElementById('submitBtn');
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+    });
+
+    // Countdown timer
+    var seconds = 300;
+    var timerEl = document.getElementById('otpTimer');
+    var timerInterval = setInterval(function() {
+        seconds--;
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        timerEl.textContent = m + ':' + String(s).padStart(2, '0');
+        if (seconds <= 60) {
+            timerEl.classList.remove('text-gray-500');
+            timerEl.classList.add('text-red-500');
+        }
+        if (seconds <= 0) {
+            clearInterval(timerInterval);
+            timerEl.textContent = 'expirado';
+        }
+    }, 1000);
 </script>
 
 </body>
