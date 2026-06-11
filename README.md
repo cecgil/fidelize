@@ -1,204 +1,136 @@
-# Fidelize – SaaS de Fidelização com QR Code
+# Fidelize – SaaS de Fidelizacao com QR Code
 
-Fidelize é um **SaaS de fidelização de clientes** simples, moderno e mobile-first, focado em **barbearias, oficinas e restaurantes**.
+Fidelize e um **SaaS de fidelizacao de clientes** simples, moderno e mobile-first, focado em **barbearias, oficinas e restaurantes**.
 
-O objetivo do sistema é **aumentar a recorrência de clientes** por meio de um fluxo intuitivo de **acúmulo de visitas, recompensas e resgate via QR Code**, sem necessidade de aplicativo ou login do cliente.
-
----
-
-## ✨ Funcionalidades
-
-### 👤 Cliente
-- Registro de visita via **QR Code da empresa**
-- Identificação simples (nome + telefone)
-- Acúmulo automático de visitas
-- Progresso visual (cartão fidelidade digital)
-- Liberação automática de recompensa ao atingir o limite
-- Resgate da recompensa via **QR Code temporário**
-- Proteção contra abuso (1 visita a cada 24h)
-
-### 🧑‍🔧 Dono / Estabelecimento
-- Mini painel administrativo
-- Visualização de clientes e total de visitas
-- Visualização de resgates pendentes
-- Validação de resgate via QR Code
-- Confirmação visual de sucesso após resgate
+O sistema **aumenta a recorrencia de clientes** por meio de um fluxo intuitivo de **acumulo de visitas, recompensas e resgate via QR Code**, sem necessidade de aplicativo ou login do cliente.
 
 ---
 
-## 🛡️ Regras Anti-Abuso (Anti-Calote)
+## Stack
 
-O sistema implementa proteções simples e eficazes:
-
-- ✅ **1 visita por cliente a cada 24 horas**
-- ✅ Identificação única por telefone (por empresa)
-- ✅ QR Code de resgate com token único e expiração
-- ✅ Validação do resgate obrigatoriamente pelo dono
-- ✅ Reset automático do contador após cada resgate
-
-Essas regras equilibram **segurança e boa experiência do usuário**.
+| Camada | Tecnologia |
+|--------|-----------|
+| Backend | Java 21 + Spring Boot 4.0.1 + Spring Security |
+| Persistencia | Spring Data JPA + PostgreSQL (prod) / H2 (dev) |
+| Frontend | Thymeleaf + Tailwind CSS + Google Fonts (Inter) |
+| Email | Spring Mail + Gmail SMTP |
+| Build | Maven |
 
 ---
 
-## 🧠 Modelo de Fidelização
+## Funcionalidades
 
-- Cada visita registrada soma **1 ponto**
-- Ao atingir o número definido pela recompensa:
-  - o cliente pode resgatar
-  - o contador reinicia automaticamente
-- Histórico é mantido para análise futura
+### Cliente (sem login)
+- Registro de visita via QR Code da empresa
+- Verificacao por OTP enviado ao e-mail (6 digitos, expira em 5 min)
+- Rate limiting: max 3 solicitacoes de OTP por telefone a cada 15 min
+- Cartao fidelidade digital com progresso visual animado
+- Resgate via QR Code temporario (5 min, uso unico)
+- Protecao anti-abuso (intervalo minimo entre visitas)
 
-Modelo inspirado em cartões fidelidade físicos, porém digital e escalável.
+### Admin (painel)
+- Dashboard com metricas (clientes, visitas, resgates)
+- QR Code da loja para impressao
+- CRUD de recompensas (com protecao contra exclusao de recompensas vinculadas a resgates)
+- Gerenciamento de equipe (multi-usuario com roles ADMIN/USUARIO)
+- Configuracoes do programa (visitas para recompensa, intervalo minimo, ativar/desativar)
+- Validacao de resgate via QR Code do cliente
+- Protecao: admin nao pode desativar a si mesmo
 
----
-
-## 🛠️ Tecnologias Utilizadas
-
-### Backend
-- **Java 21**
-- **Spring Boot**
-- Spring MVC
-- Spring Data JPA
-- Hibernate
-- H2 (ambiente de desenvolvimento)
-
-### Frontend
-- **Thymeleaf**
-- HTML5
-- CSS mobile-first (sem frameworks pesados)
-
-### Outros
-- QR Code gerado dinamicamente
-- Arquitetura orientada a domínio (package by feature)
+### Seguranca
+- Spring Security com CSRF habilitado
+- Isolamento multi-tenant (cada empresa ve apenas seus dados)
+- Validacao de inputs (servidor + cliente)
+- QR Code de resgate com token UUID, expiracao e uso unico
 
 ---
 
-## 📂 Estrutura do Projeto (simplificada)
+## Como Executar
 
-src/main/java
-└── com.cecgil.fidelize
-├── cliente
-├── empresa
-├── fidelidade
-│ ├── visita
-│ ├── recompensa
-│ ├── resgate
-│ └── qrcode
-├── admin
-└── FidelizeApplication.java
-
----
-
-## 🚀 Como Executar o Projeto
-
-### Pré-requisitos
+### Pre-requisitos
 - Java 21
 - Maven
 
-### Executar
-mvn spring-boot:run
-A aplicação ficará disponível em:
+### Desenvolvimento (H2 em memoria)
 
-Copiar código
-http://localhost:8080
-🗄️ Banco de Dados (H2)
-Console H2:
+```bash
+./mvnw spring-boot:run
+```
 
-Copiar código
-http://localhost:8080/h2
-Configuração:
+Acesse: http://localhost:8080
+Login: `admin` / `123456`
 
-JDBC URL: jdbc:h2:mem:loyaltydb
+### Producao (PostgreSQL)
 
-Usuário: sa
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=prod \
+  -DDB_USERNAME=fidelize \
+  -DDB_PASSWORD=sua_senha \
+  -DMAIL_USERNAME=seu@gmail.com \
+  -DMAIL_PASSWORD=app_password
+```
 
-Senha: (vazio)
+### Console H2 (apenas dev)
+- URL: http://localhost:8080/h2
+- JDBC URL: `jdbc:h2:mem:loyaltydb`
+- Usuario: `sa` / Senha: (vazio)
 
-📱 Fluxos Principais
-QR Code da Empresa
-bash
-Copiar código
-/c/{empresaId}
-Painel do Dono
-bash
-Copiar código
-/admin/{empresaId}
-Validação de Resgate
-bash
-Copiar código
-/validar/{token}
+---
 
-📌 Status do Projeto
+## Rotas Principais
 
-✔ MVP funcional
-✔ Fluxo completo de fidelização
-✔ Pronto para testes com usuários reais
-✔ Base sólida para evolução como SaaS
+| Metodo | Rota | Descricao |
+|--------|------|-----------|
+| GET | `/` | Landing page |
+| GET | `/cadastro` | Cadastro de empresa |
+| GET | `/login` | Login |
+| GET | `/c/{empresaId}` | Registro de visita (cliente) |
+| POST | `/c/{empresaId}/solicitar` | Solicitar OTP |
+| POST | `/c/{empresaId}/verificar` | Verificar OTP e registrar visita |
+| POST | `/resgate/{clienteId}/{recompensaId}` | Solicitar resgate |
+| GET | `/validar/{token}` | Validar QR de resgate (admin) |
+| POST | `/validar/{token}/confirmar` | Confirmar resgate |
+| GET | `/admin/painel` | Dashboard admin |
+| GET | `/admin/recompensas` | Gerenciar recompensas |
+| GET | `/admin/usuarios` | Gerenciar equipe |
+| GET | `/admin/config` | Configuracoes |
 
-ROTAS DA APLICAÇÃO:
+---
 
-GET     /
+## Estrutura do Projeto
 
-GET     /cadastro
+```
+src/main/java/com/cecgil/fidelize/
+├── admin/          # Controllers do painel admin
+├── cliente/        # Entidade e controller do cliente
+├── config/         # SecurityConfig, DataInitializer
+├── empresa/        # Entidade e repository da empresa
+├── fidelidade/
+│   ├── qrcode/     # QR Code de resgate (token + expiracao)
+│   ├── recompensa/ # Entidade e repository
+│   ├── resgate/    # Entidade, service e repository
+│   └── visita/     # Entidade, service e repository
+├── usuario/        # Entidade, repository, UserDetailsService
+├── verificacao/    # OtpService + EmailService
+└── web/            # Controllers publicos (resgate, landing)
+```
 
-POST    /cadastro
+---
 
-GET     /login
+## Progresso do Planejamento
 
-POST    /login
+| Semana | Foco | Status |
+|--------|------|--------|
+| 1 | Infraestrutura (PostgreSQL, SMTP, CSRF, validacao) | Concluida |
+| 2 | Correcao de bugs e robustez | Concluida |
+| 3 | Redesign visual completo (UI/UX) | Concluida |
+| 4 | Funcionalidades de negocio (multiplas recompensas, filtros) | Pendente |
+| 5 | Qualidade e testes | Pendente |
+| 6 | Docker e deploy | Pendente |
+| 7 | SEO, LGPD e lancamento | Pendente |
 
-POST    /logout
+---
 
-GET     /c/{empresaId}
+## Licenca
 
-POST    /c/{empresaId}
-
-POST    /resgate/{clienteId}/{recompensaId}
-
-GET     /validar/{token}
-
-POST    /validar/{token}/confirmar
-
-GET     /admin/home
-
-GET     /admin/{empresaId}
-
-GET     /admin/config
-
-POST    /admin/config
-
-GET     /admin/recompensas
-
-GET     /admin/recompensas/nova
-
-POST    /admin/recompensas
-
-GET     /admin/recompensas/{id}/editar
-
-POST    /admin/recompensas/{id}/editar
-
-POST    /admin/recompensas/{id}/toggle
-
-POST    /admin/recompensas/{id}/delete
-
-GET     /h2
-
-
-
-
-🔜 Próximos Passos (Planejados)
-
-Múltiplas recompensas por empresa
-
-Configuração de regras por empresa
-
-Histórico de ciclos e relatórios
-
-Persistência em PostgreSQL
-
-Dockerização para produção
-
-📄 Licença
-
-Projeto em desenvolvimento.
-Uso livre para fins educacionais e comerciais conforme evolução do projeto.
+Projeto em desenvolvimento. Uso livre para fins educacionais e comerciais.
